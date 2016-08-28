@@ -3,6 +3,8 @@
 <head>
 	<title>Render Test</title>
 	<script src="./lib/core.render.js"></script>
+	<script src="./lib/interface.js"></script>
+	<script src="./lib/core.plugins.js"></script>
 	<style type="text/css">
 		html, body { width: 100%; height: 100%; overflow: hidden; padding: 0; margin: 0; }
 	</style>
@@ -16,12 +18,21 @@ var Emsys = function() {
 
 	this.display = new Render({width: innerWidth, height: innerHeight});
 
+	// stuff
+	this.ioDisplayHeight = 20;
+	this.ioDisplayWidth  = 10;
+
 	this.moduleCounter = 0;
 	this.modulesVisual = [];
 	this.modulesAudial = [];
 
 	// interactivity
-	this.currentModule = null;
+	this.currentModule = undefined;
+	this.currentOutput = undefined;
+	this.currentInput  = undefined;
+	// Current mouse positions
+	this.cmx = 0;
+	this.cmy = 0;
 
 	// Audio
 	this.aC = new AudioContext();
@@ -51,24 +62,74 @@ Emsys.prototype.init = function() {
 	// inject UI into DOM
 	this.display.appendTo(document.body);
 
-	// mousedown on modules
-	this.display.DOMElement.addEventListener("mousedown", e => { 
-		_.modulesVisual.forEach( module => {
-			if( e.clientX > module.x && e.clientX < module.x+module.info.width && e.clientY> module.y && e.clientY < module.y+module.info.height ) {
+	// constantly updating mouse position
+	_.display.DOMElement.addEventListener("mousemove", e => {
+		_.cmx = e.clientX;
+		_.cmy = e.clientY;
+	});
+
+	// mousedown on app
+	this.display.DOMElement.addEventListener("mousedown", e => {
+		// m is for mouse (NOT module!)
+		let mx = e.clientX;
+		let my = e.clientY;
+
+		// walks through all modules and see if the mouse is on it or not
+		_.modulesVisual.some( module => {
+			if( mx > module.x && mx < module.x+module.info.width && my > module.y && my < module.y+module.info.height ) {
 				_.currentModule = module.id;
+
+				// when it's over a module's output
+				if( mx > module.x + module.info.width - _.ioDisplayWidth && my < module.y + module.info.numberOfOutputs*_.ioDisplayHeight ) {
+					_.currentOutput = Math.floor( (my - module.y)/ _.ioDisplayHeight );
+					return true;
+				}
+
+				// Shift Drag Event
+				if(e.shiftKey == true) {
+					_.display.DOMElement.addEventListener("mousemove", mouseShiftDragModuleHandler);
+					return true;
+				}
+
+				// Normal Drag Event
 				_.display.DOMElement.addEventListener("mousemove", mouseDragModuleHandler);
+				return true;
 			}
 		})
 	});
 
-	// mouseup on modules
-	this.display.DOMElement.addEventListener("mouseup", () => {
-		//_.currentModule = null;
+	// mouseup on app -- remove listeners -- connect 
+	this.display.DOMElement.addEventListener("mouseup", e => {
+		// m is for mouse (NOT module!)
+		let mx = e.clientX;
+		let my = e.clientY;
+
+		// walk though each module
+		_.modulesVisual.some( module => {
+			if( mx > module.x && mx < module.x + _.ioDisplayWidth && my > module.y && my < module.y + module.info.numberOfInputs*_.ioDisplayHeight ) {
+				
+				_.currentInput = Math.floor( (my - module.y)/ _.ioDisplayHeight );
+				if( _.currentOutput !== undefined ) {
+				 	if( app.isConnectionExist(_.currentModule, _.currentOutput, module.id, _.currentInput) ) {
+				 		app.disconnectModule( module.id, _.currentInput );
+				 	} else {
+						app.connectModule(_.currentModule, _.currentOutput, module.id, _.currentInput);
+				 	}
+				}
+				return true;
+			}
+		})
+
+		_.currentInput  = undefined;
+		_.currentOutput = undefined;
+
+		// remove listeners for drag events
+		_.display.DOMElement.removeEventListener("mousemove", mouseShiftDragModuleHandler);
 		_.display.DOMElement.removeEventListener("mousemove", mouseDragModuleHandler);
 	});
 
 	// move currently selected module
-	document.addEventListener("keydown", e => {
+	this.display.DOMElement.addEventListener("keydown", e => {
 		var index = _.currentModule;
 		var accl = ~~e.shiftKey << 2;
 		switch(e.key.toLowerCase()) {
@@ -93,6 +154,11 @@ Emsys.prototype.init = function() {
 		_.modulesVisual[_.currentModule].y += e.movementY;
 	}
 
+	// shiftDrag means throw the event to module's drag handler
+	function mouseShiftDragModuleHandler(e) { 
+		_.modulesAudial[_.currentModule].handleDrag(e);
+	}
+
 	// fire rendering loop
 	(function loop() {
 		requestAnimationFrame(loop);
@@ -102,39 +168,56 @@ Emsys.prototype.init = function() {
 
 Emsys.prototype.audioLoop = function(t) {
 	this.modulesAudial.forEach( module => {
-		if(module instanceof EmsysSineGenerator) module.run(t);
+		if(module.info.requestPrerun == true) module.run(t);
 	});
 
 	return this.modulesAudial[this.outputNode].run(t);
 }
 
 Emsys.prototype.renderLoop = function(w) {
-	var _ = this;
+	let _ = this;
+	// we'll need this for offset. height is never negative (and we're in an integer environment), so it is reasonably safe to do a bit shift division. 
+	let ioDisplayHalfHeight = _.ioDisplayHeight >> 1;
 
 	_.display.background("#001");
 
 	_.display.context.fillStyle = "white";
 
+	// render the user's probable connection
+	if( _.currentOutput !== undefined ) {
+		let cmod = _.modulesVisual[_.currentModule];
+		_.display.line(cmod.x + cmod.info.width, cmod.y + ioDisplayHalfHeight + _.currentOutput * _.ioDisplayHeight, _.cmx, _.cmy );
+	}
+
+	// render the modules
 	this.modulesVisual.forEach( module => {
 		let audioModule = _.modulesAudial[module.id];
 
 		// draw module box 
-		_.display.context.fillStyle = `hsl(${module.info.color}, 90%, 80%)`;
+		_.display.context.fillStyle = `hsl(${module.info.color}, 90%, ${ (module.id==_.currentModule)? 60:80 }%)`;
 		_.display.box(module.x, module.y, module.info.width, module.info.height);
 
 		// inputs
-			for(let i=0; i<module.info.numberOfInputs ; i++) _.display.box(module.x, module.y+i*20, 10, 20);
+			for(let i=0; i<module.info.numberOfInputs ; i++) 
+				_.display.box(module.x, module.y + i*_.ioDisplayHeight, _.ioDisplayWidth, _.ioDisplayHeight);
 		// output
-			for(let i=0; i<module.info.numberOfOutputs; i++) _.display.box(module.x+module.info.width-10, module.y+i*20, 10, 20);
+			for(let i=0; i<module.info.numberOfOutputs; i++) 
+				_.display.box(module.x + module.info.width-_.ioDisplayWidth, module.y+i*_.ioDisplayHeight, _.ioDisplayWidth, _.ioDisplayHeight);
 		
 		// connections
 			for(let i=0; i<audioModule.inputs.length; i++) { 
+				//skip unplugged inputs
 				if(audioModule.inputs[i] == undefined) continue;
+
 				let targetNode = _.modulesVisual[audioModule.inputs[i].id];
-				_.display.line(module.x, module.y+10+20*i, targetNode.x + targetNode.info.width, targetNode.y + 10 + 20*audioModule.inputs[i].index);
+				_.display.line(
+					module.x,
+					module.y + ioDisplayHalfHeight + _.ioDisplayHeight*i,
+					targetNode.x + targetNode.info.width,
+					targetNode.y + ioDisplayHalfHeight + _.ioDisplayHeight*audioModule.inputs[i].index);
 			}
 
-		// render Interface
+		// render module interface
 			audioModule.interface(_.display, { x: module.x+10, y: module.y } );
 
 	});
@@ -157,126 +240,31 @@ Emsys.prototype.connectModule = function(source, sourceIndex, target, targetInde
 	this.modulesAudial[source].connect( this.modulesAudial[target], targetIndex, sourceIndex );
 }
 
-//--------------
-var EmsysOutput = function(id) {
-	if( !(this instanceof EmsysOutput) ) return new EmsysOutput(id);
-	this.inputs = [];
-	this.id = id;
-	this.info   = {
-		numberOfInputs: 1,
-		numberOfOutputs: 0,
-		color: 25,
-		width: 50,
-		height: 20,
-		defaultName: "output"
-	}
+Emsys.prototype.disconnectModule = function(module, index) {
+	this.modulesAudial[module].unsetInput(index);
 }
 
-EmsysOutput.prototype.interface = function(ui, coord) {
-	ui.text(coord.x+8, coord.y+7, this.info.defaultName);
+Emsys.prototype.isConnectionExist = function( source, sourceIndex, target, targetIndex ) {
+	var src;
+	if( !(src = this.modulesAudial[target].inputs[targetIndex]) ) return false;
+	return src.id == source && src.index == sourceIndex;
 }
 
-EmsysOutput.prototype.setInput = function(node, index, originIndex, id) { 
-	this.inputs[0] = {};
-	this.inputs[0].id = id;
-	this.inputs[0].node  = node;
- 	this.inputs[0].index = originIndex;
+Emsys.prototype.setParam = function(module, param, value) {
+	this.modulesAudial[module].setParam(param, value);
 }
 
-EmsysOutput.prototype.run = function(t, z) {
-	return this.inputs[0].node.run(t, z, this.inputs.index);
-}
 
-EmsysOutput.prototype.connect = function() {		
-}
-
-//----------
-var EmsysSineGenerator = function(id) {
-	if( !(this instanceof EmsysSineGenerator)) return new EmsysSineGenerator();
-	this.inputs = [];
-	this.id = id;
-	this.lastSample = 0;
-	this.info = {
-		numberOfInputs: 2,
-		numberOfOutputs: 1,
-		color: 100,
-		width: 100,
-		height: 40,
-		defaultName: "sine osc"
-	}
-}
-
-EmsysSineGenerator.prototype.interface = function(ui, coord) {
-	ui.text(coord.x+2, coord.y+2, this.info.defaultName);
-}
-
-EmsysSineGenerator.prototype.setInput = function(node, index, originIndex, id) {
-	this.inputs[index] = {};
-	this.inputs[index].id = id;
-	this.inputs[index].module = node;
-	this.inputs[index].index  = originIndex;
-}
-
-EmsysSineGenerator.prototype.run = function(t, z, outputIndex) {
-	if( z == 1 ) return this.lastSample;
-	var pm = (this.inputs[1])? this.inputs[1].module.run(t, 1, this.inputs[1].index) : 0;
-	var f  = (this.inputs[0])? this.inputs[0].module.run(t, 1, this.inputs[0].index) : 440;
-	return this.lastSample = Math.sin( Math.PI*2*f*t + pm );
-};
-
-EmsysSineGenerator.prototype.connect = function(node, index, originIndex) { 
-	node.setInput(this, index, originIndex, this.id);
-}
-
-//-----
-var EmsysMultiplier = function(id) {
-	if( !(this instanceof EmsysMultiplier)) return new EmsysMultiplier();
-	this.inputs = [];
-	this.id = id;
-	this.info = {
-		numberOfInputs : 2,
-		numberOfOutputs: 1,
-		color: 80,
-		width: 100,
-		height: 40,
-		defaultName: "Multiplier"
-	}
-}
-
-EmsysMultiplier.prototype.interface = function(ui, coord) {
-	ui.text(coord.x + 18, coord.y + 8, "*",2);
-}
-
-EmsysMultiplier.prototype.setInput = function(node, index, originIndex, id) {
-	this.inputs[index] = {};
-	this.inputs[index].id = id;
-	this.inputs[index].module = node;
-	this.inputs[index].index = originIndex;
-}
-
-EmsysMultiplier.prototype.run = function (t, z) {
-	var input1 = (this.inputs[0])? this.inputs[0].module.run(t, 1, this.inputs[0].index) : 0;
-	var input2 = (this.inputs[1])? this.inputs[1].module.run(t, 1, this.inputs[1].index) : 0;
-	return input1 * input2;
-}
-
-EmsysMultiplier.prototype.connect = function(node, index, originIndex) { 
-	node.setInput(this, index, originIndex, this.id);
-}
-
+// ----
 
 var app = new Emsys();
 
 app.init();
 
-var osc = app.createModule(100, 100, EmsysSineGenerator);
-var osc2 = app.createModule(200,200, EmsysSineGenerator);
-var ga = app.createModule(350, 150, EmsysMultiplier);
+for(let i = 1; i < 5; i++) app.createModule(200, 100*i, EmsysSineGenerator);
 
-app.connectModule(osc, 0, ga, 0);
-app.connectModule(ga, 0, osc, 1);
-
-app.connectModule(ga , 0, app.outputNode, 0);
+app.setParam(app.createModule(50,50, EmsysNumber), 0, 440);
+for(let i = 2; i < 6; i++) { app.setParam(app.createModule(50, 100*i, EmsysNumber), 0, i); app.createModule(120, 100*i, EmsysMultiplier); }; 
 
 </script>
 </body>
