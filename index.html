@@ -152,11 +152,11 @@ Emsys.prototype.init = function() {
 			},
 			{
 				text: "EmsysSineGenerator",
-				callback: function(x, y) { app.createModule(x, y, EmsysSineGenerator); }
+				callback: function(x, y) { app.createModule(x - _.cx, y - _.cy, EmsysSineGenerator); }
 			},
 			{
 				text: "EmsysMultiplier", 
-				callback: function(x, y) { app.createModule(x, y, EmsysMultiplier); }
+				callback: function(x, y) { app.createModule(x - _.cx, y - _.cy, EmsysMultiplier); }
 			}
 		];
 
