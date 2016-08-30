@@ -14,10 +14,10 @@
 <script>
 'use strict';
 
-var Emsys = function() {
+var Emsys = function(config) {
 	if( !(this instanceof Emsys) ) return new Emsys();
 
-	this.display = new Render({width: innerWidth, height: innerHeight});
+	this.display = new Render({width: config.width, height: config.height});
 	this.interface = new Interface(this.display);
 
 	// stuff
@@ -40,11 +40,16 @@ var Emsys = function() {
 	this.cy = 0;
 
 	// Audio
-	this.aC = new AudioContext();
+	this.aC = (config.audioContext instanceof AudioContext)? config.audioContext : new AudioContext();
 	this.processor = this.aC.createScriptProcessor(2048, 0, 1);
 	this.t = 0;
 
 	this.currentModule = this.outputModule = this.createModule(innerWidth-100, 100, EmsysOutput);
+}
+
+Emsys.prototype.appendTo = function(element) {
+	this.display.appendTo(element);
+	return this;
 }
 
 Emsys.prototype.init = function() {
@@ -64,8 +69,7 @@ Emsys.prototype.init = function() {
 		_.t += incr;
 	}
 
-	// inject UI into DOM
-	this.display.appendTo(document.body);
+	// make DOM focus-able
 	this.display.DOMElement.tabIndex = 1; // oh gosh
 
 	// constantly updating mouse position
@@ -334,7 +338,7 @@ Emsys.prototype.loadSetup = function(json) {
 }
 // ----
 
-var app = new Emsys();
+var app = new Emsys({width: innerWidth, height: innerHeight}).appendTo(document.body);
 
 app.init();
 
