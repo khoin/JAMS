@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Render Test</title>
+	<title>JAMS</title>
 	<script src="./lib/core.render.js"></script>
 	<script src="./lib/interface.js"></script>
 	<script src="./lib/jams.js"></script>
@@ -20,10 +20,33 @@ var app = new JAMS({width: innerWidth, height: innerHeight}).appendTo(document.b
 
 app.init();
 
-/**
-app.createModule(0,0, EmsysSineGenerator);
-app.createModule(100,100, EmsysNumber);
-**/
+
+app.createModule(220,220, JAMSSineGenerator);
+//app.createModule(100,100, JAMSNumber);
+var test = app.interface.createWindow({
+	title: "preferences",
+	width: 200, height: 100,
+	x: 100, y: 100,
+	children: [
+		Interface.TextNode({
+			content: "",
+			width : 1,
+			height: 1,
+			xAnchor: "center",
+			yAnchor: "center",
+			fontSize: 2
+		})
+	]
+});
+
+var txt = "*notices your bulge*\nOwO\nWhat's this??!";
+var i =0;
+setInterval(function() {
+	if(i == txt.length+1) return;
+	test.children[0].config.content = txt.substr(0,i);
+i++;
+},100);
+
 
 </script>
 </body>
