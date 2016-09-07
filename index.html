@@ -21,31 +21,34 @@ var app = new JAMS({width: innerWidth, height: innerHeight}).appendTo(document.b
 app.init();
 
 
-app.createModule(220,220, JAMSSineGenerator);
+app.createModule(220,220, JAMSNumber);
 //app.createModule(100,100, JAMSNumber);
+/**
 var test = app.interface.createWindow({
 	title: "preferences",
 	width: 200, height: 100,
 	x: 100, y: 100,
+	resizable: true,
+	renderBorders: false,
 	children: [
 		Interface.TextNode({
-			content: "",
-			width : 1,
-			height: 1,
+			content: "Frequency",
+			width : 0.5,
+			height: 0.25,
 			xAnchor: "center",
 			yAnchor: "center",
-			fontSize: 2
+			fontSize: 1
+		}),
+		Interface.NumberNode({
+			width: 0.5,
+			height:0.25,
+			xAnchor: "center",
+			yAnchor: "center"
 		})
 	]
 });
 
-var txt = "*notices your bulge*\nOwO\nWhat's this??!";
-var i =0;
-setInterval(function() {
-	if(i == txt.length+1) return;
-	test.children[0].config.content = txt.substr(0,i);
-i++;
-},100);
+**/
 
 
 </script>
