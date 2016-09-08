@@ -2,20 +2,16 @@
 <html>
 <head>
 	<title></title>
+	<script src="./lib/MIDI.js"></script>
 	<script src="./lib/core.render.js"></script>
 	<script src="./lib/interface.js"></script>
 	<script src="./lib/jams.js"></script>
 	<script src="./lib/jams.plugins.js"></script>
 </head>
 <body><script>
-	var test = [0,1,2,3,4,5,6,7,8];
-
-	for(let i=0; i<test.length; i++) {
-		if(test[i] % 2 == 0) {
-			test.splice(i,1);
-		}
-		console.log(test, i);
-	}
+	MIDI.on('any', function(a,b) {
+		console.log(b.data);
+	});
 	</script>
 </body>
 </html>
