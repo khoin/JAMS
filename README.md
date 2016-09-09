@@ -15,13 +15,13 @@ Because I'm not an expert in Javascript, I really hope someone could take up thi
 
 * Users will be able to store the setups without saving files (currently as JSON). Something like indexedDB, perhaps?
 
-* There have been discussions with @stai12 about whether `JAMS` and its Modules should handle graphical interface or not. Currently it is, par argument that saving/loading setups will be easier. I think having it only handling audio is very appealing, especially if somebody wants to include it in their project without using the UI.
+* There have been discussions with [@stai12](https://github.com/stai12) about whether `JAMS` and its Modules should handle graphical interface or not. Currently it is, par argument that saving/loading setups will be easier. I think having it only handling audio is very appealing, especially if somebody wants to include it in their project without using the UI.
 
 * This entire project should be rewritten in compliance with the ES6 syntaxes, which I know nothing about. On top of that, many parts of it (including `Interface.render()` and `JAMS.render()`) should be re-structured.
 
 ## Usage
 
-You can go to [this file](.lib/jams.plugins.js) and read the self-documenting plug-ins.
+You can go to [this file](lib/jams.plugins.js) and read the self-documenting plug-ins.
 
 ## FAQ
 
