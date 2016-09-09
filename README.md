@@ -21,7 +21,7 @@ Because I'm not an expert in Javascript, I really hope someone could take up thi
 
 ## Usage
 
-You can go to [.lib/jams.plugins.js](this file) and read the self-documenting plug-ins.
+You can go to [this file](.lib/jams.plugins.js) and read the self-documenting plug-ins.
 
 ## FAQ
 
