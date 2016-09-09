@@ -9,9 +9,9 @@ Because I'm not an expert in Javascript, I really hope someone could take up thi
 
 * The current behavior when a user drags/clicks on a module is that the app will move the module on the workspace. Some modules (Number) are interactive when the user holds Shift key and drags it. I personally think this is an icky behavior and modules should be interactive without holding Shift. If this behavior is adapted, the module should tell the main app if it's blocking or not, so the app can decide to drag the module's position or not.
 
-* ScriptNodeProcessor is now ![deprecated](https://webaudio.github.io/web-audio-api/#the-scriptprocessornode-interface---deprecated). Adapt to the new AudioWorklet when it is rolled out.
+* ScriptNodeProcessor is now [deprecated](https://webaudio.github.io/web-audio-api/#the-scriptprocessornode-interface---deprecated). Adapt to the new AudioWorklet when it is rolled out.
 
-* Make this application available offline using ![Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API).
+* Make this application available offline using [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API).
 
 * Users will be able to store the setups without saving files (currently as JSON). Something like indexedDB, perhaps?
 
@@ -21,7 +21,7 @@ Because I'm not an expert in Javascript, I really hope someone could take up thi
 
 ## Usage
 
-You can go to ![.lib/jams.plugins.js](this file) and read the self-documenting plug-ins.
+You can go to [.lib/jams.plugins.js](this file) and read the self-documenting plug-ins.
 
 ## FAQ
 
