@@ -8,10 +8,8 @@
 	<script src="./lib/jams.js"></script>
 	<script src="./lib/jams.plugins.js"></script>
 </head>
-<body><script>
-	MIDI.on('any', function(a,b) {
-		console.log(b.data);
-	});
+<body><canvas id=c></canvas><script>
+	document.getElementById("c").addEventListener('touchmove', console.log);
 	</script>
 </body>
 </html>
