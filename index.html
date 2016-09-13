@@ -3,17 +3,19 @@
 <head>
 	<title>JAMS</title>
 	<meta charset="utf-8">
-	<script src="./lib/MIDI.js"></script>
-	<script src="./lib/core.render.js"></script>
-	<script src="./lib/interface.js"></script>
-	<script src="./lib/jams.js"></script>
-	<script src="./lib/jams.plugins.js"></script>
+
 	<style type="text/css">
 		html, body { width: 100%; height: 100%; overflow: hidden; padding: 0; margin: 0; }
 		.grab { cursor: -webkit-grabbing; }
 	</style>
 </head>
 <body>
+
+<script src="lib/MIDI.js"></script>
+<script src="lib/core.render.js"></script>
+<script src="lib/interface.js"></script>
+<script src="lib/jams.js"></script>
+<script src="lib/jams.plugins.js"></script>
 <script>
 
 // ----
@@ -26,33 +28,6 @@ app.init();
 app.loadSetup(`[{"id":1,"type":"JAMSOutput","x":1216,"y":275,"inputs":[],"params":[],"name":"output"},{"id":4,"type":"JAMSt","x":506,"y":258,"inputs":[],"params":[],"name":""},{"id":5,"type":"JAMSMultiplier","x":586,"y":255,"inputs":[{"id":4,"index":0},{"id":27,"index":0}],"params":[],"name":""},{"id":6,"type":"JAMSNumber","x":369,"y":203,"inputs":[],"params":[{"name":"Value","type":"number","value":-400},{"name":"Drag Sensitivity","type":"number","value":5}],"name":""},{"id":7,"type":"JAMSPlus","x":689,"y":309,"inputs":[{"id":5,"index":0},{"id":8,"index":0}],"params":[],"name":""},{"id":8,"type":"JAMSNumber","x":583,"y":334,"inputs":[],"params":[{"name":"Value","type":"number","value":3.8000000000000007},{"name":"Drag Sensitivity","type":"number","value":5}],"name":""},{"id":9,"type":"JAMSRemainder","x":767,"y":286,"inputs":[{"id":7,"index":0},{"id":10,"index":0}],"params":[],"name":""},{"id":10,"type":"JAMSNumber","x":681,"y":266,"inputs":[],"params":[{"name":"Value","type":"number","value":2},{"name":"Drag Sensitivity","type":"number","value":5}],"name":""},{"id":11,"type":"JAMSOnOffEnvelope","x":846,"y":249,"inputs":[{"id":12,"index":0},{"id":9,"index":0}],"params":[],"name":""},{"id":12,"type":"JAMSRemainder","x":769,"y":231,"inputs":[{"id":5,"index":0},{"id":10,"index":0}],"params":[],"name":""},{"id":14,"type":"JAMSMultiplier","x":1110,"y":349,"inputs":[{"id":28,"index":0},{"id":15,"index":0}],"params":[],"name":""},{"id":15,"type":"JAMSNumber","x":988,"y":412,"inputs":[],"params":[{"name":"Value","type":"number","value":0.2},{"name":"Drag Sensitivity","type":"number","value":5}],"name":""},{"id":16,"type":"JAMSSineGenerator","x":710,"y":411,"inputs":[{"id":27,"index":0},{"id":40,"index":0}],"params":[],"name":"sine osc"},{"id":17,"type":"JAMSPlus","x":887,"y":386,"inputs":[{"id":11,"index":0},{"id":16,"index":0}],"params":[],"name":""},{"id":18,"type":"JAMS4Array","x":442,"y":397,"inputs":[{"id":20,"index":0},{"id":24,"index":0},{"id":25,"index":0},{"id":26,"index":0},{"id":25,"index":0}],"params":[],"name":""},{"id":19,"type":"JAMSt","x":97,"y":322,"inputs":[],"params":[],"name":""},{"id":20,"type":"JAMSRemainder","x":314,"y":375,"inputs":[{"id":21,"index":0},{"id":23,"index":0}],"params":[],"name":""},{"id":21,"type":"JAMSMultiplier","x":217,"y":344,"inputs":[{"id":19,"index":0},{"id":22,"index":0}],"params":[],"name":""},{"id":22,"type":"JAMSNumber","x":133,"y":395,"inputs":[],"params":[{"name":"Value","type":"number","value":10.200000000000001},{"name":"Drag Sensitivity","type":"number","value":5}],"name":""},{"id":23,"type":"JAMSNumber","x":178,"y":432,"inputs":[],"params":[{"name":"Value","type":"number","value":4},{"name":"Drag Sensitivity","type":"number","value":5}],"name":""},{"id":24,"type":"JAMSNumber","x":335,"y":432,"inputs":[],"params":[{"name":"Value","type":"number","value":1},{"name":"Drag Sensitivity","type":"number","value":5}],"name":""},{"id":25,"type":"JAMSNumber","x":331,"y":457,"inputs":[],"params":[{"name":"Value","type":"number","value":1.5},{"name":"Drag Sensitivity","type":"number","value":5}],"name":""},{"id":26,"type":"JAMSNumber","x":328,"y":488,"inputs":[],"params":[{"name":"Value","type":"number","value":2},{"name":"Drag Sensitivity","type":"number","value":5}],"name":""},{"id":27,"type":"JAMSMultiplier","x":500,"y":369,"inputs":[{"id":32,"index":0},{"id":18,"index":0}],"params":[],"name":""},{"id":28,"type":"JAMSMultiplier","x":1003,"y":325,"inputs":[{"id":29,"index":0},{"id":17,"index":0}],"params":[],"name":""},{"id":29,"type":"JAMSNumber","x":904,"y":270,"inputs":[],"params":[{"name":"Value","type":"number","value":0.4},{"name":"Drag Sensitivity","type":"number","value":5}],"name":""},{"id":30,"type":"JAMS4Array","x":383,"y":253,"inputs":[{"id":31,"index":0},{"id":36,"index":0},{"id":37,"index":0},{"id":38,"index":0},{"id":39,"index":0}],"params":[],"name":""},{"id":31,"type":"JAMSRemainder","x":288,"y":217,"inputs":[{"id":33,"index":0},{"id":23,"index":0}],"params":[],"name":""},{"id":32,"type":"JAMSMultiplier","x":424,"y":277,"inputs":[{"id":6,"index":0},{"id":30,"index":0}],"params":[],"name":""},{"id":33,"type":"JAMSMultiplier","x":200,"y":208,"inputs":[{"id":34,"index":0},{"id":19,"index":0}],"params":[],"name":""},{"id":34,"type":"JAMSMultiplier","x":198,"y":282,"inputs":[{"id":35,"index":0},{"id":22,"index":0}],"params":[],"name":""},{"id":35,"type":"JAMSNumber","x":90,"y":271,"inputs":[],"params":[{"name":"Value","type":"number","value":0.125},{"name":"Drag Sensitivity","type":"number","value":5}],"name":""},{"id":36,"type":"JAMSNumber","x":285,"y":270,"inputs":[],"params":[{"name":"Value","type":"number","value":1},{"name":"Drag Sensitivity","type":"number","value":5}],"name":""},{"id":37,"type":"JAMSNumber","x":281,"y":295,"inputs":[],"params":[{"name":"Value","type":"number","value":0.75},{"name":"Drag Sensitivity","type":"number","value":5}],"name":""},{"id":38,"type":"JAMSNumber","x":280,"y":323,"inputs":[],"params":[{"name":"Value","type":"number","value":0.5},{"name":"Drag Sensitivity","type":"number","value":5}],"name":""},{"id":39,"type":"JAMSNumber","x":292,"y":350,"inputs":[],"params":[{"name":"Value","type":"number","value":0.25},{"name":"Drag Sensitivity","type":"number","value":5}],"name":""},{"id":40,"type":"JAMSSineGenerator","x":568,"y":469,"inputs":[{"id":32,"index":0}],"params":[],"name":"sine osc"},{"id":41,"type":"JAMSSineGenerator","x":1092,"y":275,"inputs":[],"params":[],"name":"connect multiplier\\nto output\\nto hear sounds"}]`);
 
 
-//app.createModule(100,100, JAMSNumber);
-/**
-var test = app.interface.createWindow({
-	title: "preferences",
-	width: 200, height: 100,
-	x: 100, y: 100,
-	resizable: true,
-	renderBorders: false,
-	children: [
-		Interface.TextNode({
-			content: "Frequency",
-			width : 0.5,
-			height: 0.25,
-			xAnchor: "center",
-			yAnchor: "center",
-			fontSize: 1
-		}),
-		Interface.NumberNode({
-			width: 0.5,
-			height:0.25,
-			xAnchor: "center",
-			yAnchor: "center"
-		})
-	]
-});
-
-**/
 
 
 </script>
