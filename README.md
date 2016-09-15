@@ -23,6 +23,8 @@ Because I'm not an expert in Javascript, I really hope someone could take up thi
 
 * Modules shouldn't stay in one file. They should be in many files for the sake of organization, but then I don't want the clients to make multiple requests to my server. Some sort of compiling script should be make to mesh all these files up together. Same for Interface modules.
 
+* Can the interface be rendered using WebGL or something? I thought it might be slower using Canvas2DRenderingContext.
+
 ## Usage
 
 You can go to [this file](lib/jams.plugins.js) and read the self-documenting plug-ins.
