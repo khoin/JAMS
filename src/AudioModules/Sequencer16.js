@@ -33,18 +33,23 @@ A Sequencer16
 	}
 
 	interface	(g) {
+		// numbers
 		for (let i = 0; i < 16; i++) 
-			g.text(5 + 15 * (i%4), 4 + 15 * ~~(i/4), ~~this.params[0].value[i])
+			g.text(8 - (Graphics.textSize(""+(~~this.params[0].value[i]))[0]/2) + 15 * (i%4), 5 + 15 * ~~(i/4), ~~this.params[0].value[i])
+		// lines
 		for (let i = 1; i < 4; i++) {
 			g.line(0, 15 * i, this.width, 15 * i);
 			g.line(15 * i, 0, 15 * i, this.height - 15);
 		}
+		// and everything nice
 		g.context.fillRect(this.position%4 * 15, ~~(this.position/4) * 15, 15, 15);
 		g.line(0, 60, this.width, 60);
 		g.text(5, this.height - 10, "SEQ16");
 
 		g.context.fillStyle = "#000";
-		g.text(5 + 15 * (this.position%4), 4 + 15 * ~~(this.position/4), ~~this.params[0].value[this.position])
+		g.text(	8 - (Graphics.textSize(""+(~~this.params[0].value[this.position]))[0]/2) + 15 * (this.position%4), 
+				5 + 15 * ~~(this.position/4), 
+				~~this.params[0].value[this.position])
 	}
 	
 	run			(t, z, a) {
