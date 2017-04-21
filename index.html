@@ -43,22 +43,15 @@
 <script src="src/JAMS.js"></script>
 
 <script>
-
 // ----
 try { 
 	var app = new JAMS({width: innerWidth, height: innerHeight}).appendTo(document.body);
-
 	app.init();
-
-	
 } catch(e) {
 	document.write('There was an Error loading JAMS: <br>');
 	document.write(e);
 	console.log(e);
 }
-
-
-
 </script>
 </body>
 </html>

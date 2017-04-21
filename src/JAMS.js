@@ -50,7 +50,7 @@ class JAMS {
 			children: ["QuadMixer", "Scope"]
 		}];
 		
-		this.outputModule = this.createModule(innerWidth-100, 100, Modules.Output);
+		this.outputModule = this.createModule(~~(innerWidth/2), 300, Modules.Output);
 	}
 
 	appendTo	(element) {
@@ -61,19 +61,19 @@ class JAMS {
 	init 		() {
 		let _ = this;
 
-		this.processor.onaudioprocess = function(audioProcessingEvent) {
-			var obuffer = audioProcessingEvent.outputBuffer;
-			var incr = obuffer.length/_.aC.sampleRate;
-			for( var ch=0; ch < obuffer.numberOfChannels; ch++ ){ 
-				var odata = obuffer.getChannelData(ch);
-				for(var i=0; i < obuffer.length; i++)
+		this.processor.onaudioprocess = function(e) {
+			let obuffer = e.outputBuffer;
+			let incr = obuffer.length/_.aC.sampleRate;
+			for (let ch = 0; ch < obuffer.numberOfChannels; ch++ ){ 
+				let odata = obuffer.getChannelData(ch);
+				for (let i = 0; i < obuffer.length; i++)
 					odata[i] = _.audioLoop(_.t + (i/_.aC.sampleRate), ch);
 			}
 			_.t += incr;
 		}
 
 		// MIDI Error Window
-		var mid = new MIDI((error) => {
+		let mid = new MIDI(error => {
 			let win = new InterfaceWindow({
 				x: ~~(innerWidth/2), y: ~~(innerHeight/2),
 				w: 350, h: 100,
@@ -129,127 +129,82 @@ class JAMS {
 		this.keyListeners.add("keydown"		, this.interface.eKeyDown			, this.interface);
 
 		// rightclick
-		this.g.DOMElement.addEventListener("contextmenu", e => {
-			e.preventDefault();
-			const x = e.clientX;
-			const y = e.clientY;
+		this.g.DOMElement.addEventListener("contextmenu", this.eContextMenu.bind(this));
 
-			let currentModule = this.desktop.isOnModule(x, y);
+		// fire rendering loop
+		this.render();
+	}
 
-			if (currentModule) {
+	eContextMenu(e) {
+		e.preventDefault();
+		const x = e.clientX;
+		const y = e.clientY;
 
-				let currentInput = this.desktop.isOnInput(currentModule, x, y);
+		let currentModule = this.desktop.isOnModule(x, y);
 
-				if (currentInput !== -1) {
-					this.interface.add(
-						new InterfaceContextMenu({ x: x, y: y,
-							options: [{
-								text: "Disconnect",
-								callback: () => currentModule.unsetInput(currentInput)
-							}]
-						})
-					)
-				} else {
-					this.interface.add(
-						new InterfaceContextMenu({ x: x, y: y,
-							options: [{
-								text: "Delete",
-								callback: () => this.deleteModule(currentModule)
-							},{
-								text: "Parameters",
-								callback: () => {
-									let win = new InterfaceWindow({ title: `${currentModule.name} Parameters`, x: x, y: y, w: 200, h: 200, isResizable: true });
+		if (currentModule) {
 
-									win
-									.appendChild(new WindowText({
-										ww: 1/2, wh: 30,
-										content: "Module Name"
-									}))
-									.appendChild(new WindowTextField({
-										ww: 1/2, wh: 30, 
-										getValue: () => currentModule.name,
-										setValue: x => currentModule.name = x
-									}))
+			let currentInput = this.desktop.isOnInput(currentModule, x, y);
 
-									currentModule.params.forEach( par => {
-										win.appendChild(new WindowText({
-											ww: 1/2, wh: 30,
-											content: par.name
-										}));
-
-										switch(par.type) {
-											case "number":
-												win.appendChild(new WindowNumber({
-													ww: 1/2, wh: 30,
-													getValue: () => par.value,
-													setValue: x => par.value = x
-												}))
-											break;
-											case "boolean":
-												win.appendChild(new WindowCheckBox({
-													ww: 1/2, wh: 30,
-													getValue: () => par.value,
-													setValue: x => par.value = x
-												}))
-											break;
-											default:
-												win.appendChild(new WindowText({
-													ww: 1/2, wh: 30,
-													content: "<unsupported type>"
-												}));
-										}
-									})
-
-									this.interface.add(win);
-								}
-							}]
-						})
-					)
-				}
-			} else {
-
-				let pluginTree = this.plugins.map( category => { 
-					return { 
-						text: category.name, 
-						children: category.children.map( child => {
-						return {
-							text: child,
-							callback: () => this.createModule(this.desktop.mouseMapX(x), this.desktop.mouseMapY(y), Modules[child])
-						}})
-					} 
-				});
-
+			if (currentInput !== -1) {
 				this.interface.add(
-					new InterfaceContextMenu({ x: x, y: y, 
+					new InterfaceContextMenu({ x: x, y: y,
 						options: [{
-							text: "Add",
-							children: pluginTree
+							text: "Disconnect",
+							callback: () => currentModule.unsetInput(currentInput)
+						}]
+					})
+				)
+			} else {
+				this.interface.add(
+					new InterfaceContextMenu({ x: x, y: y,
+						options: [{
+							text: "Delete",
+							callback: () => this.deleteModule(currentModule)
 						},{
-							text: "Save Setup",
-							callback: this.exportSetup.bind(this)
-						},{
-							text: "Open Setup",
-							callback: this.openSetup.bind(this)
-						},{
-							text: "New Setup",
+							text: "Parameters",
 							callback: () => {
-								let win = new InterfaceWindow({ title: "Confirm", x: x, y: y, w: 200, h: 70, isResizable: false	});
+								let win = new InterfaceWindow({ title: `${currentModule.name} Parameters`, x: x, y: y, w: 200, h: 200, isResizable: true });
 
 								win
-								.appendChild(new WindowText({ content: "Confirm clearing setup?", wh: 25, ww: 1 }))
-								.appendChild(new WindowButton({ content: "OK!" , callback: () => { this.newSetup(); win.close(); }, wh: 15 }))
+								.appendChild(new WindowText({
+									ww: 1/2, wh: 30,
+									content: "Module Name"
+								}))
+								.appendChild(new WindowTextField({
+									ww: 1/2, wh: 30, 
+									getValue: () => currentModule.name,
+									setValue: x => currentModule.name = x
+								}))
 
-								this.interface.add(win)
-							}
-						},{
-							text: "About",
-							callback: () => {
-								let win = new InterfaceWindow({ title: "About", x: x, y: y, w: 400, h: 130, isResizable: false});
+								currentModule.params.forEach( par => {
+									win.appendChild(new WindowText({
+										ww: 1/2, wh: 30,
+										content: par.name
+									}));
 
-								win
-								.appendChild(new WindowText({ content: "JAMS", fontSize: 3, wh: 50, ww: 1}))
-								.appendChild(new WindowText({ content: "JAMS - A Modular System", fontSize: 2, wh: 20, ww: 1}))
-								.appendChild(new WindowText({ content: "By KhoiN ", fontSize: 1, wh: 40, ww: 1}))
+									switch(par.type) {
+										case "number":
+											win.appendChild(new WindowNumber({
+												ww: 1/2, wh: 30,
+												getValue: () => par.value,
+												setValue: x => par.value = x
+											}))
+										break;
+										case "boolean":
+											win.appendChild(new WindowCheckBox({
+												ww: 1/2, wh: 30,
+												getValue: () => par.value,
+												setValue: x => par.value = x
+											}))
+										break;
+										default:
+											win.appendChild(new WindowText({
+												ww: 1/2, wh: 30,
+												content: "<unsupported type>"
+											}));
+									}
+								})
 
 								this.interface.add(win);
 							}
@@ -257,11 +212,57 @@ class JAMS {
 					})
 				)
 			}
-			
-		});
+		} else {
 
-		// fire rendering loop
-		this.render();
+			let pluginTree = this.plugins.map( category => { 
+				return { 
+					text: category.name, 
+					children: category.children.map( child => {
+					return {
+						text: child,
+						callback: () => this.createModule(this.desktop.mouseMapX(x), this.desktop.mouseMapY(y), Modules[child])
+					}})
+				} 
+			});
+
+			this.interface.add(
+				new InterfaceContextMenu({ x: x, y: y, 
+					options: [{
+						text: "Add",
+						children: pluginTree
+					},{
+						text: "Save Setup",
+						callback: this.exportSetup.bind(this)
+					},{
+						text: "Open Setup",
+						callback: this.openSetup.bind(this)
+					},{
+						text: "New Setup",
+						callback: () => {
+							let win = new InterfaceWindow({ title: "Confirm", x: x, y: y, w: 200, h: 70, isResizable: false	});
+
+							win
+							.appendChild(new WindowText({ content: "Confirm clearing setup?", wh: 25, ww: 1 }))
+							.appendChild(new WindowButton({ content: "OK!" , callback: () => { this.newSetup(); win.close(); }, wh: 15 }))
+
+							this.interface.add(win)
+						}
+					},{
+						text: "About",
+						callback: () => {
+							let win = new InterfaceWindow({ title: "About", x: x, y: y, w: 400, h: 130, isResizable: false});
+
+							win
+							.appendChild(new WindowText({ content: "JAMS", fontSize: 3, wh: 50, ww: 1}))
+							.appendChild(new WindowText({ content: "JAMS - A Modular System", fontSize: 2, wh: 20, ww: 1}))
+							.appendChild(new WindowText({ content: "Fork me at github.com/khoin/JAMS ", fontSize: 1, wh: 40, ww: 1}))
+
+							this.interface.add(win);
+						}
+					}]
+				})
+			)
+		}
 	}
 
 	render 		() {
@@ -294,16 +295,16 @@ class JAMS {
 	deleteModule(deletingModule) {
 		let i = 0, _ = this;
 
-		this.midiModules.some( (module,index) => {
+		this.midiModules.some( (module, index) => {
 			if(module == deletingModule) {
 				_.midiModules.splice(index, 1);
 				return true;
 			}
 		})
 
-		this.modules.forEach( (module,id) => {
+		this.modules.forEach( (module, id) => {
 			if( module == deletingModule ) i = id;
-			module.inputs.forEach( (input,index) => {
+			module.inputs.forEach( (input, index) => {
 				if( !input ) return;
 				if( input.module == deletingModule ) module.unsetInput(index);
 			});
@@ -394,18 +395,14 @@ class JAMS {
 	}
 
 	loadSetup		(json) {
-		var _ = this;
+		let _ = this;
 		this.newSetup();
-		//try { 
-			var setup = JSON.parse(json); 
-			//}
-		//catch(e) { console.error("Invalid JSON.", e); return;}
-
+		let setup = JSON.parse(json); 
 		try {
 			setup.forEach( module => {
 				_.moduleCounter = Math.max(_.moduleCounter, module.id);
 				try {
-					var mod = _.createModule(module.x, module.y, Modules[module.type], module.id);
+					let mod = _.createModule(module.x, module.y, Modules[module.type], module.id);
 				} catch(e) {
 					console.warn(e);
 					module.invalid = true;
@@ -423,11 +420,11 @@ class JAMS {
 				}
 			})
 			setup.forEach( module => { 
-				var targetModule = _.getModuleFromId(module.id);
+				let targetModule = _.getModuleFromId(module.id);
 				if(targetModule == undefined) return;
 				module.inputs.forEach( (input,index) => { 
 					if( input == null ) return;
-					var sourceModule = _.getModuleFromId(input.id); 
+					let sourceModule = _.getModuleFromId(input.id); 
 					if( sourceModule == undefined ) return;
 					sourceModule.connect(targetModule, index, input.index);
 				})
@@ -438,16 +435,3 @@ class JAMS {
 	}
 
 }
-
-//JAMS.prototype.appendTo = function(element) {}
-//JAMS.prototype.init = function() {}
-//JAMS.prototype.render = function() {}
-//JAMS.prototype.audioLoop = function(t, ch) {}
-//JAMS.prototype.createModule = function(x, y, module, id) {}
-//JAMS.prototype.deleteModule = function(deletingModule) {}
-//JAMS.prototype.getModuleFromId = function(id) { }
-//JAMS.prototype.exportSetup = function() {}
-//JAMS.prototype.newSetup = function () {}
-//JAMS.prototype.openSetup = function() {}
-//JAMS.prototype.saveSetupToJSON = function() {}
-//JAMS.prototype.loadSetup = function(json) {}
