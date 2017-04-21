@@ -402,7 +402,7 @@ class JAMS {
 			setup.forEach( module => {
 				_.moduleCounter = Math.max(_.moduleCounter, module.id);
 				try {
-					let mod = _.createModule(module.x, module.y, Modules[module.type], module.id);
+					var mod = _.createModule(module.x, module.y, Modules[module.type], module.id);
 				} catch(e) {
 					console.warn(e);
 					module.invalid = true;
