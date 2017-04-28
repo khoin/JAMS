@@ -21,15 +21,15 @@ class Desktop {
 	}
 
 	scaleUp			(e) { 
-		this.cX 	-= this.mouseMapX(e.clientX); 
-		this.cY 	-= this.mouseMapY(e.clientY);
+		this.cX 	-= ~~this.mouseMapX(e.clientX); 
+		this.cY 	-= ~~this.mouseMapY(e.clientY);
 		this.sXY	= ~~(this.sXY + 1);
 	}
 
 	scaleDown		(e) {
 		if ( this.sXY == 1 ) return;
-		this.cX 	+= this.mouseMapX(e.clientX); 
-		this.cY 	+= this.mouseMapY(e.clientY);
+		this.cX 	+= ~~this.mouseMapX(e.clientX); 
+		this.cY 	+= ~~this.mouseMapY(e.clientY);
 		this.sXY	= ~~(this.sXY - 1);
 	}
 
@@ -174,7 +174,7 @@ class Desktop {
 
 			// Module local rendering
 			g.context.save();
-			g.context.translate(m.x, m.y);
+			g.context.translate(~~m.x, ~~m.y);
 				m.interface(g, { portSize: portSize } );
 			g.context.restore();
 		}
