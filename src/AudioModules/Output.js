@@ -4,11 +4,11 @@ Modules.Output = class JAMSOutput extends AudioModule {
 
 		this.className			= "Output";
 
-		this.numberOfInputs		= 2;
+		this.numberOfInputs		= 1;
 		this.numberOfOutputs	= 0;
 		this.color				= 10;
 		this.width				= 30;
-		this.height				= 30;
+		this.height				= 15;
 		this.name				= "OUT";
 	}
 
@@ -17,10 +17,11 @@ Modules.Output = class JAMSOutput extends AudioModule {
 	}
 
 	interface		(g, args) {
-		g.text(7, 11, this.name);
+		g.text(7, 5, this.name);
 	}
 
 	run				(t, z, a) {
-		return (this.inputs[a])? this.inputs[a].module.run(t, z, this.inputs[a].index) : 0;
+		let out = this.getInput(0, t, 1);
+		return [out[0], out[1]];
 	}
 }

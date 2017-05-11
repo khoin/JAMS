@@ -64,11 +64,16 @@ class JAMS {
 		this.processor.onaudioprocess = function(e) {
 			let obuffer = e.outputBuffer;
 			let incr = obuffer.length/_.aC.sampleRate;
-			for (let ch = 0; ch < obuffer.numberOfChannels; ch++ ){ 
-				let odata = obuffer.getChannelData(ch);
-				for (let i = 0; i < obuffer.length; i++)
-					odata[i] = _.audioLoop(_.t + (i/_.aC.sampleRate), ch);
+
+			let ldata = obuffer.getChannelData(0);
+			let rdata = obuffer.getChannelData(1);
+
+			for (let i = 0; i < obuffer.length; i++) {
+				let o = _.audioLoop(_.t + (i/_.aC.sampleRate));
+				ldata[i] = o[0];
+				rdata[i] = o[1];
 			}
+			
 			_.t += incr;
 		}
 
@@ -272,12 +277,12 @@ class JAMS {
 		this.interface.render();
 	}
 
-	audioLoop	(t, ch) {
+	audioLoop	(t) {
 		this.modules.forEach( module => {
 			if(module.prerun == true) module.run(t);
 		});
 
-		return this.outputModule.run(t, 1, ch);
+		return this.outputModule.run(t, 1, 0);
 	}
 
 	createModule(x, y, module, id) {

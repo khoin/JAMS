@@ -25,8 +25,8 @@ E.g: 10 % 4 = 2;
 	}
 
 	run				(t, z, a) {
-		let input1 = (this.inputs[0])? this.inputs[0].module.run(t, 1, this.inputs[0].index) : 0;
-		let input2 = (this.inputs[1])? this.inputs[1].module.run(t, 1, this.inputs[1].index) : 0;
-		return input1 % input2;
+		const input1 = this.getInput(0, t, 1);
+		const input2 = this.getInput(1, t, 1);
+		return [input1[0] % input2[0], input1[1] % input2[1]];
 	}
 }

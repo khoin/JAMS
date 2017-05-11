@@ -27,9 +27,9 @@ ITS NOT WORKING
 	}
 	
 	run			(t, z, a) {
-		if (z === 1) return this.on * (this.position%Math.pow(2,a+1) == 0) * 1.5;
+		if (z === 1) return [this.on * (this.position%Math.pow(2,a) == 0) * 1.5, 0];
 
-		if(this.inputs[0] && this.inputs[0].module.run(t, 1, this.inputs[0].index) > 0.9) {
+		if(this.getInput(0, t, 1)[0] > 0.9) {
 			this.position = (this.position+1)%64;
 			this.on = 1;
 		} else {

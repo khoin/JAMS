@@ -49,6 +49,6 @@ through the Parameters window.
 	}
 
 	run				(t, z, a) {
-		return this.params[0]._v;
+		return [this.params[0]._v, 0];
 	}
 }

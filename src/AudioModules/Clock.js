@@ -29,6 +29,6 @@ Return times in seconds or pulses
 	
 	run			(t, z, a) {
 		// 1/64
-		return t * (1-a) + ~~(t%(3.75/this.params[0].value) < 1/sampleRate) * a * 2;
+		return [t * (1-a) + ~~(t%(3.75/this.params[0].value) < 1/sampleRate) * a * 2, 0];
 	}
 }

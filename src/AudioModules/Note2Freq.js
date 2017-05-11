@@ -32,7 +32,7 @@ Modules.Note2Freq = class Note2Freq extends AudioModule {
 	}
 
 	run				(t, z, a) {
-		if(this.inputs[0] == undefined) return;
-		return Math.pow(2, ( ~~this.inputs[0].module.run(t, 1, this.inputs[0].index) + this.params[1].value - 69 ) / this.params[2].value) * this.params[0].value;
+		if(this.inputs[0] == undefined) return [0,0];
+		return [Math.pow(2, ( ~~this.getInput(0, t, 1)[0] + this.params[1].value - 69 ) / this.params[2].value) * this.params[0].value, 0];
 	}
 }

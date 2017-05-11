@@ -27,6 +27,11 @@ class AudioModule {
 
 	eMouseDown	(x, y) {}
 
+	// index, time, calc or not, dV
+	getInput	(i, t, z, defaultValue = 0) {
+		return (this.inputs[i])? this.inputs[i].module.run(t, z, this.inputs[i].index) : [defaultValue, defaultValue];
+	}
+
 	setParam	(index, val) {
 		this.params[index].value = val;
 		return this;

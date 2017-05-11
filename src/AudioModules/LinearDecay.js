@@ -25,8 +25,8 @@ A linear decay.
 	}
 	
 	run			(t, z, a) {
-		if (!this.inputs[0]) return 0;
-		this.position = (this.inputs[0].module.run(t, 1, this.inputs[0].index) > 0.9)? 1 : Math.max(0, this.position - this.decayStep);
-		return this.position;
+		if (!this.inputs[0]) return [0,0];
+		this.position = (this.getInput(0, t, 1)[0] > 0.9)? 1 : Math.max(0, this.position - this.decayStep);
+		return [this.position, 0];
 	}
 }

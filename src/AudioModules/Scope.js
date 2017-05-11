@@ -25,7 +25,7 @@ Oscilloscope
 	
 	run			(t, z, a) {
 		if(!this.inputs[0]) return;
-		this.array.unshift( this.inputs[0].module.run(t,1, this.inputs[0].index)/2 + 0.5);
+		this.array.unshift( this.getInput(0, t, 1)[0]/2 + 0.5);
 		this.array.pop();
 	}
 }

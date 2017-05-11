@@ -22,6 +22,7 @@ to create Phase Modulation.
 `;
 		
 		this.lastSample			= 0;
+		this.phase 				= 0;
 	}
 
 	interface		(g, args) {
@@ -32,9 +33,10 @@ to create Phase Modulation.
 	}
 
 	run				(t, z, a) {
-		if( z == 1 ) return this.lastSample;
-		var pm = (this.inputs[1])? this.inputs[1].module.run(t, 1, this.inputs[1].index) : 0;
-		var f  = (this.inputs[0])? this.inputs[0].module.run(t, 1, this.inputs[0].index) : 440;
-		return this.lastSample = Math.sin( Math.PI*2*f*t + pm );
+		if( z == 1 ) return [this.lastSample, this.lastSample];
+		const pm = this.getInput(1, t, 1)[0]; 
+		const f  = this.getInput(0, t, 1, 440)[0];
+		this.lastSample = Math.sin( Math.PI*2*(this.phase += f/sampleRate) + pm )
+		return [this.lastSample, this.lastSample];
 	}
 }

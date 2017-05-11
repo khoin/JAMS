@@ -23,8 +23,8 @@ Generates Random 0-1 by pulse
 	}
 	
 	run			(t, z, a) {
-		if (!this.inputs[0]) return this.sample;
-		this.sample = (this.inputs[0].module.run(t, 1, this.inputs[0].index) > 0.9)? Math.random() : this.sample;
-		return this.sample;
+		if (!this.inputs[0]) return [this.sample, 0];
+		this.sample = (this.getInput(0, t, 1)[0] > 0.9)? Math.random() : this.sample;
+		return [this.sample, 0];
 	}
 }
