@@ -10,12 +10,13 @@ Modules.Scope = class Scope extends AudioModule {
 		this.color			= 237; 
 		this.width			= 60; 
 		this.height			= 30;
-		this.name			= "cdivider";
+		this.name			= "scope";
 		this.helpText		=
 `---- Scope ----
 Oscilloscope
 `;
 		this.array = new Array(this.width)
+		
 	}
 
 	interface	(g, args) {

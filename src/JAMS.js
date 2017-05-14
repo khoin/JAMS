@@ -47,7 +47,7 @@ class JAMS {
 			children: ["LinearDecay"]
 		},{
 			name: "Misc",
-			children: ["QuadMixer", "Scope"]
+			children: ["QuadMixer", "Scope", "XYScope", "MonoMerge"]
 		}];
 		
 		this.outputModule = this.createModule(~~(innerWidth/2), 300, Modules.Output);
