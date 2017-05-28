@@ -53,7 +53,6 @@ Basic WAV sampler. No interpolation.
 		g.text(4, 35,"END");
 		g.text(4, 50,"TRIG");
 
-		g.text(20, 70, this.position);
 		if (this.params[2].value) {
 			g.context.fillRect(30, 0, 30, 15);
 			g.context.fillStyle = "#000";
