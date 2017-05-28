@@ -15,6 +15,7 @@ class WindowNumber extends InterfaceWindowComponent {
 
 	eMouseDown		(x, y) {
 		this.isTyping = true;
+		this.inputBuffer = "";
 	}
 
 	eUnfocus		() {
@@ -46,7 +47,7 @@ class WindowNumber extends InterfaceWindowComponent {
 		g.box(0, 0, w, h);
 		
 		g.context.fillStyle = (this.isTyping)? "#fff" : "#000";
-		g.context.fillRect(1, 1, w-1.5, h-1);
+		g.context.fillRect(1, 1, w-1, h-1);
 		g.context.fillStyle = (this.isTyping)? "#000" : "#fff";
 		g.text(2, 2, (this.inputBuffer.length > 15)? "..." + this.inputBuffer.substr(-15) : this.inputBuffer);
 

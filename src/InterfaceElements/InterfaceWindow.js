@@ -13,7 +13,6 @@ class InterfaceWindow extends InterfaceElement {
 		this.onResize	= false;
 		this.isDragging	= false;
 		this.isResizing = false;
-		this.isFocus	= false;
 
 		return this;
 	}
@@ -46,8 +45,6 @@ class InterfaceWindow extends InterfaceElement {
 		if ( x > this.w - 15 && y > this.h - 15 && this.isResizable)
 			this.isResizing = true;
 
-		this.isFocus = true;
-
 		// components
 		for (let i = 0; i < this.children.length; i++) {
 			let el = this.children[i];
@@ -60,7 +57,6 @@ class InterfaceWindow extends InterfaceElement {
 	}
 
 	eUnfocus		() {
-		this.isFocus = false;
 	}
 
 	eMouseMove		(e) {
@@ -114,7 +110,6 @@ class InterfaceWindow extends InterfaceElement {
 
 		g.context.strokeStyle 	= "#fff";
 		g.context.fillStyle 	= "#fff";
-		g.context.lineWidth = (this.isFocus)? 2 : 1;
 		g.box	(0		, 0	, this.w	, this.h);
 		// Title Box
 		g.context.lineWidth = 1;

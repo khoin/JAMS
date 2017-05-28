@@ -46,6 +46,9 @@ class JAMS {
 			name: "Envelopes",
 			children: ["LinearDecay"]
 		},{
+			name: "Sampling",
+			children: ["Sampler"]
+		},{
 			name: "Misc",
 			children: ["QuadMixer", "Scope", "XYScope", "MonoMerge"]
 		}];
@@ -201,6 +204,27 @@ class JAMS {
 												ww: 1/2, wh: 30,
 												getValue: () => par.value,
 												setValue: x => par.value = x
+											}))
+										break;
+										case "wavefile":
+											win.appendChild(new WindowFileUpload({
+												ww: 1/2, wh: 30,
+												extension: "wav",
+												getValue: () => x,
+												setValue: x => {
+													try {
+														let parsed = WaveReader(x);
+														par.value = parsed;
+														if (par.onload) par.onload();
+													} catch(e) {
+														this.interface.add((new InterfaceWindow({x: 100, y:100, w: 100, h: 50, title: "Error"}))
+															.appendChild(new WindowText({
+																ww: 1, wh: 20,
+																content: e.message
+															}))
+														)
+													}
+												}
 											}))
 										break;
 										default:

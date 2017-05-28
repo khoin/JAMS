@@ -29,7 +29,7 @@ to create Phase Modulation.
 		let portSize = args.portSize;
 		let anchor   = portSize/2 - 3;
 		g.text(3, anchor, "FREQ");
-		g.text(3, anchor + portSize, "PHAS");
+		g.text(3, anchor + portSize, "FASE");
 	}
 
 	run				(t, z, a) {
