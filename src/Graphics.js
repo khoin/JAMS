@@ -101,7 +101,7 @@ class Graphics {
 
 		[...txt.toString()].forEach(ltr => {
 			let i = 0;
-			let d = lD[ltr] || 0x3FFFFFFF; 
+			let d = lD[ltr.toUpperCase()] || 0x3FFFFFFF; 
 			let spacing = ( d < 0 ) ? 5 : 6;
 			
 			if ( d === 1 ) { y0 += 10 * f; x0 = 0; return; }
@@ -125,7 +125,7 @@ class Graphics {
 
 		return [
 			[...txt].map(k => {
-					if (lD[k] === 1) {numLines++; return 0;}
+					if (lD[k.toUpperCase()] === 1) {numLines++; return 0;}
 					else if (lD[k] === 2) return 2*f;
 					else return f*(6-(lD[k]<0)); 
 				}).reduce((a,b) => a+b),

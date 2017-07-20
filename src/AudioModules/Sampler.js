@@ -19,9 +19,15 @@ Basic WAV sampler. No interpolation.
 			name: "WaveData",
 			type: "wavefile",
 			value: [new Float32Array(sampleRate), new Float32Array(sampleRate), sampleRate],
-			onload: () => {
+			onload: () => { 
 				this.adjustedRate = this.params[0].value[2] / sampleRate;
 				this.position = this.realPosition = 0;
+			},
+			paramSave: () => {
+				return WaveParamSave(this.params[0].value);
+			},
+			paramLoad: d => {
+				return WaveParamLoad(d);
 			}
 		};
 

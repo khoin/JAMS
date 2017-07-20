@@ -34,6 +34,7 @@ class AudioModule {
 
 	setParam	(index, val) {
 		this.params[index].value = val;
+		if(this.params[index].onload) this.params[index].onload();
 		return this;
 	}
 

@@ -15,7 +15,7 @@ class JAMS {
 		// Audio
 		this.aC = (config.audioContext instanceof AudioContext)? config.audioContext : new AudioContext();
 		window.sampleRate = this.aC.sampleRate;
-		this.processor = this.aC.createScriptProcessor(0, 0, 2);
+		this.processor = this.aC.createScriptProcessor(2048, 0, 2);
 		let splitter	= this.aC.createChannelSplitter();
 		let merger		= this.aC.createChannelMerger();
 
@@ -48,6 +48,9 @@ class JAMS {
 		},{
 			name: "Sampling",
 			children: ["Sampler"]
+		},{
+			name: "Effects",
+			children: ["Flange"]
 		},{
 			name: "Misc",
 			children: ["QuadMixer", "Scope", "XYScope", "MonoMerge"]
@@ -373,10 +376,14 @@ class JAMS {
 				new WindowButton({ ww: 1 , wh: 20,
 					content: "SAVE", 
 					callback: () => {
+						/**
 						let saver = document.createElement("a");
 						saver.download = "JAMS-"+fileName+".json";
 						saver.href="data:application/json,"+this.saveSetupToJSON();
 						saver.click();
+						**/
+						let file = new File([this.saveSetupToJSON()], "JAMS-"+fileName+".json", {type: "data:application/json;charset=utf-8"});
+						saveAs(file);
 					}
 				})
 			)
@@ -410,13 +417,21 @@ class JAMS {
 				}
 			});
 
+			let params = module.params.map( p => {
+				if (!p.paramSave) {
+					return p.value;
+				} else {
+					return p.paramSave(p.value);
+				}
+			});
+
 			setup.push({
 				id: module.id,
 				type: module.className,
 				x: module.x,
 				y: module.y,
 				inputs: inputsArr,
-				params: module.params,
+				params: params,
 				name: module.name
 			})
 		});
@@ -440,7 +455,10 @@ class JAMS {
 				}
 				mod.name = module.name || "";
 				module.params.forEach( (val, ind) => {
-						mod.setParam(ind, val.value);
+						if(!mod.params[ind].paramLoad)
+							mod.setParam(ind, val);
+						else
+							mod.setParam(ind, mod.params[ind].paramLoad(val));
 				});
 
 				if(module.type == "Output") {

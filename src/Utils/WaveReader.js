@@ -34,13 +34,13 @@ function WaveReader(x) {
 		let blocOffs	= sampIncr * numChan * i;
 		leftChan[i]	= x	.substr(startPoint + blocOffs, sampIncr)
 							.split("")
-							.reduce((a,n,i) => a + (n.charCodeAt(0) << (i*8)), 0);
+							.reduce((a,n,j) => a + (n.charCodeAt(0) << (j*8)), 0);
 		leftChan[i] = leftChan[i] & 0x8000? leftChan[i]/range - 2 : leftChan[i] / range;
 
 		if (numChan == 2) {
 			rightChan[i] = (x.substr(startPoint + blocOffs + sampIncr, sampIncr)
 							.split("")
-							.reduce((a,n,i) => a + (n.charCodeAt(0) << (i*8)), 0) ) ;
+							.reduce((a,n,j) => a + (n.charCodeAt(0) << (j*8)), 0) ) ;
 			rightChan[i] = rightChan[i] & 0x8000? rightChan[i]/range - 2 : rightChan[i] / range;
 		} else {
 			rightChan[i] = leftChan[i];
@@ -48,4 +48,29 @@ function WaveReader(x) {
 
 	}
 	return [leftChan, rightChan, sampleR8];
+}
+
+// 15-bit 
+function WaveParamSave(data) {
+	let left = "";
+	let right = "";
+
+	for (let i = 0; i < data[0].length; i++) {
+		left +=  String.fromCharCode( ~~((data[0][i] + 1) * 16384) );
+		right += String.fromCharCode( ~~((data[1][i] + 1) * 16384) );
+	}
+
+	return [left, right, data[2]];
+}
+
+function WaveParamLoad(data) {
+	let left = new Float32Array(data[0].length);
+	let right = new Float32Array(left.length);
+
+	for (let i = 0; i < data[0].length; i++) {
+		left[i] = (data[0].charCodeAt(i)-16384)/16384;
+		right[i]= (data[1].charCodeAt(i)-16384)/16384;
+	}
+
+	return [left, right, data[2]];
 }
