@@ -50,13 +50,13 @@ class JAMS {
 			children: ["Sampler"]
 		},{
 			name: "Effects",
-			children: ["Flange"]
+			children: ["Flange", "Delay"]
 		},{
 			name: "Misc",
 			children: ["QuadMixer", "Scope", "XYScope", "MonoMerge"]
 		}];
 		
-		this.outputModule = this.createModule(~~(innerWidth/2), 300, Modules.Output);
+		this.outputModule = this.createModule(~~(innerWidth/2), ~~(innerHeight/2), Modules.Output);
 	}
 
 	appendTo	(element) {
@@ -138,6 +138,7 @@ class JAMS {
 		this.mouseListeners.add("mouseup"	, this.desktop.eMouseUp				, this.desktop);
 
 		this.keyListeners.add("keydown"		, this.interface.eKeyDown			, this.interface);
+		this.keyListeners.add("keydown"		, this.desktop.eKeyDown				, this.desktop);
 
 		// rightclick
 		this.g.DOMElement.addEventListener("contextmenu", this.eContextMenu.bind(this));
@@ -212,7 +213,7 @@ class JAMS {
 										case "wavefile":
 											win.appendChild(new WindowFileUpload({
 												ww: 1/2, wh: 30,
-												extension: "wav",
+												extension: ".wav",
 												getValue: () => x,
 												setValue: x => {
 													try {
@@ -220,7 +221,8 @@ class JAMS {
 														par.value = parsed;
 														if (par.onload) par.onload();
 													} catch(e) {
-														this.interface.add((new InterfaceWindow({x: 100, y:100, w: 100, h: 50, title: "Error"}))
+														console.error(e);
+														this.interface.add((new InterfaceWindow({x: 100, y:100, w: 400, h: 50, title: "Error"}))
 															.appendChild(new WindowText({
 																ww: 1, wh: 20,
 																content: e.message
@@ -394,6 +396,7 @@ class JAMS {
 		setTimeout(() => { /**remove canvas drag listener**/ },100);
 		var opener = document.createElement("input");
 		opener.type = "file";
+		opener.accept = ".json";
 		opener.addEventListener('change', (e) => {
 			if(!e.target.files[0] || e.target.files[0].name.substr(-5).toLowerCase() !== ".json") return;
 			var reader = new FileReader();

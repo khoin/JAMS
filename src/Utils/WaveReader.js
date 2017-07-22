@@ -1,5 +1,6 @@
 // x binary from FileReader
 // returns [leftChannel as Float32Array, rightChannel as F32A, sampleRate]
+// only support 16-bit pcm
 
 function WaveReader(x) {
 	if (x.substr(8,8) !== "WAVEfmt ") 
@@ -50,7 +51,7 @@ function WaveReader(x) {
 	return [leftChan, rightChan, sampleR8];
 }
 
-// 15-bit 
+// 15-bit 16384
 function WaveParamSave(data) {
 	let left = "";
 	let right = "";

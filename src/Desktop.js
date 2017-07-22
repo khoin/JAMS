@@ -18,6 +18,7 @@ class Desktop {
 		this.selectedInput 	= -1;
 		this.selectedOutput	= -1;
 
+		this.caplocks = false;
 	}
 
 	scaleUp			(e) { 
@@ -74,7 +75,7 @@ class Desktop {
 
 			if(this.selectedOutput !== -1) return;
 
-			if (e.shiftKey) {
+			if (e.shiftKey || this.caplocks) {
 				listener.turnOn("eModuleShiftDrag");
 				this.selectedModule.eMouseDown(this.mouseMapX(x) - this.selectedModule.x, this.mouseMapY(y) - this.selectedModule.y);
 			} else {
@@ -125,9 +126,18 @@ class Desktop {
 		this.selectedModule.eDrag(e, x, y);
 	}
 
+	eKeyDown		(e) {
+		if (e.key == "CapsLock")
+			this.caplocks = !this.caplocks;
+	}
+
 	render 			() {
 		const g = this.g;
 		const portSize = this.portSize;
+
+		g.context.fillStyle = "#fff";
+		if (this.caplocks) 
+			g.text(5, 5, "CAPLOCKS ON");
 
 		g.context.save();
 

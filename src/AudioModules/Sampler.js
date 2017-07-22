@@ -9,11 +9,11 @@ Modules.Sampler = class Sampler extends AudioModule {
 		this.numberOfOutputs= 1;
 		this.color			= 55; 
 		this.width			= 60; 
-		this.height			= 60;
+		this.height			= 75;
 		this.name			= "sampler";
 		this.helpText		=
 `---- Sampler ----
-Basic WAV sampler. No interpolation.
+Basic WAV sampler. 
 `;
 		this.params[0] = {
 			name: "WaveData",
@@ -22,6 +22,23 @@ Basic WAV sampler. No interpolation.
 			onload: () => { 
 				this.adjustedRate = this.params[0].value[2] / sampleRate;
 				this.position = this.realPosition = 0;
+				// calc peaks
+				this.rms = new Float32Array(this.width);
+				this.len = this.params[0].value[0].length;
+				let chunk =  (this.len / (this.width * 32));
+
+				for (let i = 0, j = 0; i < this.len; i += chunk, j++)
+					this.rms[~~(j/32)] = 
+						Math.max(this.rms[~~(j/32)], 
+								~~( 15 * Math.sqrt((1/Math.max(1,chunk)) * 
+									this.params[0].value[0]
+										.slice(~~i, ~~(i+chunk))
+										.map(x => x*x)
+										.reduce((a,b) => a+b, 0))
+									) 
+								);
+				
+
 			},
 			paramSave: () => {
 				return WaveParamSave(this.params[0].value);
@@ -42,6 +59,9 @@ Basic WAV sampler. No interpolation.
 			value: true
 		}
 
+		this.rms = new Float32Array(this.width);
+		this.len = sampleRate;
+
 		this.position = 0;
 		this.realPosition = 0;
 		this.adjustedRate = this.params[0].value[2] / sampleRate;
@@ -59,6 +79,12 @@ Basic WAV sampler. No interpolation.
 		g.text(4, 35,"END");
 		g.text(4, 50,"TRIG");
 
+		// wave
+		for (let i = 0; i < this.rms.length; i++) 
+			g.context.fillRect(i, 75-this.rms[i], 1, this.rms[i]);
+
+		g.context.fillRect(~~(this.width*this.position/this.len), 60, 1, 15);
+		
 		if (this.params[2].value) {
 			g.context.fillRect(30, 0, 30, 15);
 			g.context.fillStyle = "#000";

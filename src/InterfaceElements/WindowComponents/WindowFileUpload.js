@@ -16,16 +16,15 @@ class WindowFileUpload extends InterfaceWindowComponent {
 	eMouseDown		(x, y) {
 		var opener = document.createElement("input");
 		opener.type = "file";
+		opener.accept = this.ext;
 		opener.addEventListener('change', e => {
-			let file = e.target.files[0]
-			if(!file || (this.ext !== "" && file.name.substr(-1-this.ext.length).toLowerCase() !== "."+this.ext)) return;
+			let file = e.target.files[0];
 			var reader = new FileReader();
 			reader.onload = (e) => {
 				this.fileName = file.name;
 				this.setValue(e.target.result);
 			}
 			reader.readAsBinaryString(file.slice(0, file.size));
-			
 		});
 		opener.click();
 	}
