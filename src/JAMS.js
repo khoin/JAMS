@@ -41,7 +41,7 @@ class JAMS {
 			children: ["Note2Freq"]
 		},{
 			name: "Sequencers",
-			children: ["Sequencer16"]
+			children: ["Sequencer16", "Switch"]
 		},{
 			name: "Envelopes",
 			children: ["LinearDecay"]
