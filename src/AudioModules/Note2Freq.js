@@ -5,8 +5,8 @@ Modules.Note2Freq = class Note2Freq extends AudioModule {
 		this.className 		= "Note2Freq";
 		this.numberOfInputs = 1;
 		this.numberOfOutputs= 1;
-		this.color 			= 130; 
-		this.width 			= 60; 
+		this.color 			= 3; 
+		this.width 			= 80; 
 		this.height 		= 15;
 		this.name 			= "number";
 

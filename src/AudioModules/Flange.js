@@ -10,8 +10,8 @@ Modules.Flange = class Flange extends AudioModule {
 
 		this.numberOfInputs	= 7;
 		this.numberOfOutputs= 1;
-		this.color			= 30; 
-		this.width			= 60; 
+		this.color			= 4; 
+		this.width			= 72; 
 		this.height			= 105;
 		this.name			= "flange";
 		this.helpText		= "";
@@ -28,7 +28,7 @@ Modules.Flange = class Flange extends AudioModule {
 		this.pointer= 0;
 		this.D 		= 0;
 		this.minD	= 100;
-		this.maxD 	= 2048;
+		this.maxD 	= 512;
 
 		this.buffer = [new Float32Array(this.BUFFER_LENGTH + 1), new Float32Array(this.BUFFER_LENGTH + 1)];
 
@@ -44,16 +44,16 @@ Modules.Flange = class Flange extends AudioModule {
 		g.text(3, anchor + portSize*4, "FEEDBCK");
 		g.text(3, anchor + portSize*5, "DRY");
 		g.text(3, anchor + portSize*6, "WET");
-		g.context.fillRect(50, 0, 1, 105);
-		g.context.fillRect(50, ~~(105*this.minD/this.BUFFER_LENGTH), 10, 1);
-		g.context.fillRect(50, ~~(105*this.maxD/this.BUFFER_LENGTH), 10, 1);
-		g.context.fillRect(50, ~~(105*this.D/this.BUFFER_LENGTH), 10, 1);
+		g.context.fillRect(64, 0, 1, 105);
+		g.context.fillRect(64, ~~(105*this.minD/this.BUFFER_LENGTH), 8, 1);
+		g.context.fillRect(64, ~~(105*this.maxD/this.BUFFER_LENGTH), 8, 1);
+		g.context.fillRect(64, ~~(105*this.D/this.BUFFER_LENGTH), 8, 1);
 	}
 	
 	run			(t, z, a) {
 		let input = this.getInput(0, t, 1);
 		this.minD = this.getInput(1, t, 1)[0]? Math.min(this.maxD, Math.max(0, this.getInput(1, t, 1)[0])) : 100;
-		this.maxD = this.getInput(2, t, 1)[0]? Math.min(2048, Math.max(this.minD, this.getInput(2, t, 1)[0])) : 2048;
+		this.maxD = this.getInput(2, t, 1)[0]? Math.min(2048, Math.max(this.minD, this.getInput(2, t, 1)[0])) : 512;
 		this.step = this.getInput(3, t, 1)[0]? Math.max(0, this.getInput(3, t, 1)[0]/1000) : 0.005;
 		this.feedback = this.getInput(4, t, 1)[0]? Math.min(0.99, Math.max(0, this.getInput(4, t, 1)[0])) : 0.8;
 		this.dry = this.getInput(5, t, 1)[0]? Math.min(1, Math.max(0, this.getInput(5, t, 1)[0])) : 0.5;

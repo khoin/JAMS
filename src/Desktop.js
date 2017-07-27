@@ -22,6 +22,7 @@ class Desktop {
 	}
 
 	scaleUp			(e) { 
+		if ( this.sXY >= 3) return;
 		this.cX 	-= ~~this.mouseMapX(e.clientX); 
 		this.cY 	-= ~~this.mouseMapY(e.clientY);
 		this.sXY	= ~~(this.sXY + 1);
@@ -135,7 +136,7 @@ class Desktop {
 		const g = this.g;
 		const portSize = this.portSize;
 
-		g.context.fillStyle = "#fff";
+		g.setColor(1);
 		if (this.caplocks) 
 			g.text(5, 5, "CAPLOCKS ON");
 
@@ -159,7 +160,10 @@ class Desktop {
 			const m = this.mL[i];
 
 			// Draw current module
-			g.context.fillStyle = g.context.strokeStyle = `hsl(${m.color}, 100%, ${(m == this.selectedModule)? 65 : 85}%)`;
+			//g.context.fillStyle = g.context.strokeStyle = `hsl(${m.color}, 100%, ${(m == this.selectedModule)? 65 : 85}%)`;
+			g.setColor(m.color);
+			if (this.selectedModule == m) 
+				g.box(m.x, m.y + m.height, m.width, 1);
 			g.box(m.x, m.y, m.width, m.height);
 
 			// Draw inputs & outputs

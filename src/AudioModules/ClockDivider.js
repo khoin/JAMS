@@ -7,8 +7,8 @@ Modules.ClockDivider = class ClockDivider extends AudioModule {
 
 		this.numberOfInputs	= 1;
 		this.numberOfOutputs= 5;
-		this.color			= 137; 
-		this.width			= 30; 
+		this.color			= 7; 
+		this.width			= 40; 
 		this.height			= 75;
 		this.name			= "cdivider";
 		this.helpText		=
@@ -23,7 +23,7 @@ ITS NOT WORKING
 		let portSize = args.portSize;
 		let anchor   = portSize/2 - 3;
 		for( let i = 0; i < 5; i ++)
-			g.text(3, anchor + portSize * i, "1/" + (64 >> i));
+			g.text(4, anchor + portSize * i, "1/" + (64 >> i));
 	}
 	
 	run			(t, z, a) {

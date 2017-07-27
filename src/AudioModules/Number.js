@@ -5,8 +5,8 @@ Modules.Number = class Number extends AudioModule {
 		this.className 		= "Number";
 		this.numberOfInputs = 0;
 		this.numberOfOutputs= 1;
-		this.color 			= 170; 
-		this.width 			= 60; 
+		this.color 			= 2; 
+		this.width 			= 72; 
 		this.height 		= 15;
 		this.name 			= "number";
 		this.helpText =
@@ -27,6 +27,8 @@ through the Parameters window.
 				this._v = x;
 				this.text = Math.round(this._v*10000)/10000;
 				this.text = this.text.toString();
+				if ( (this._v > 99999 || (this._v < 0.00001 && this._v > 0) ) && this.text.length > 5)
+					this.text = Math.round(10000*this._v/(10**~~Math.log10(this._v)))/10000+"E"+~~Math.log10(this._v);
 			},
 			get value () { return this._v; }
 		};
@@ -44,8 +46,7 @@ through the Parameters window.
 	}
 
 	interface		(g, args) {
-		let text = this.params[0].text;
-		g.text(4, 4, (text.length > 8)? ".." + text.substr(0,8) : text );
+		g.text(4, 4,  this.params[0].text );
 	}
 
 	run				(t, z, a) {

@@ -7,8 +7,8 @@ Modules.QuadMixer = class QuadMixer extends AudioModule {
 
 		this.numberOfInputs	= 4;
 		this.numberOfOutputs= 1;
-		this.color			= 55; 
-		this.width			= 30; 
+		this.color			= 3; 
+		this.width			= 32; 
 		this.height			= 60;
 		this.name			= "quadmixer";
 		this.helpText		=
@@ -22,7 +22,7 @@ Temporary Mixer that deals with that stereo bullshit.
 	}
 
 	interface	(g) {
-		g.text(11, 13, "Q\nU\nA\nD",1);
+		g.text(12, 13, "Q\nU\nA\nD",1);
 	}
 	
 	run			(t, z, a) {

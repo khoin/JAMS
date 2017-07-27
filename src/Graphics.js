@@ -11,39 +11,59 @@ class Graphics {
 			this.DOMElement.height = config.height;
 
 		this.context     = this.DOMElement.getContext("2d");
+
+		this.palette = ["#000", "#FFF", "#FF0", "#F0F", "#0FF", "#0F8", "#F80", "#F08"];
+		this.currentColor = 1;
+
+		this.font = config.font; //bitmap
+		this.fontMap = " 、。,.·:;?!゛°´`¨^￣＿ヽヾゝゞ〃仝々〆〇ー－-/\\～‖|…‥‘’“”()〔〕[]{}〈〉《》「」『』【】+-±×÷=≠<>≦≧∞∴♂♀゜′″℃¥$¢£%#%*@§☆★◆□■△▲▽▼※〒→←↑↓〓           ∈∋⊆⊇⊂⊃∩∪        ∧∨¬⇒⇔∀∃           ∠⊥⌒∂∇≡≒≪≫√∽∝∵∫∬       Å‰♯♭♪†‡¶ 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz                            ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをん       ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶ    ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ        αβγδεζηθικλμνξοπρςστυφχψω                                 АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ               абвгдеёжзийклмнопрстуфхцчшщъыьэюя         ─│┌┐┘└├┬┤┴┼━┃┏┓┛┗┣┳┫┻╋┠┯┨┷┿┝┰┥┸╂";
+		this.fontSet = [];
+
+		this.loadFont();
 	}
 
-	static lD () {
-		return {	
-			"\n": 1, "." : -2113929216	, "-" : 1073741855,		"+" : 4357252,
-			" " : 2, "," : -1038024704	, "'": -2147481536,		"*" : 5189,
-			"A" : 589284910		, "a" : -1261127680		, "0" : 488298030,
-			"B" : 521651759		, "b" : -1902863327		, "1" : 474091716,
-			"C" : 487622190		, "c" : -1676625920		, "2" : 1042424366,
-			"D" : 521717295		, "d" : -1667974904		, "3" : 488124974,
-			"E" : 1041728575	, "e" : -1059021786		, "4" : 554203697,
-			"F" : 35095615		, "f" : -1039098834		, "5" : 520633407,
-			"G" : 488408622		, "g" : -561568466		, "6" : 488160302,
-			"H" : 589284913		, "h" : -1835754463		, "7" : 35791391,
-			"I" : 1010962575	, "i" : -1943992318		, "8" : 488159790,
-			"J" : 488129055		, "j" : -1001254780		, "9" : 487540270,
-			"K" : 580101681		, "k" : -1840139231		, "%" : 572662304,
-			"L" : 1041269793	, "l" : -1337847676		, "/" : 69341448,
-			"M" : 588961649		, "m" : 593143808		,
-			"N" : 589092465		, "n" : -1835755520		,
-			"O" : 488162862		, "o" : -1936418816		,
-			"P" : 35112495		, "p" : -1038899929		,
-			"Q" : 748340782		, "q" : -259578578		,
-			"R" : 588760623		, "r" : -2112579584		,
-			"S" : 520553534		, "s" : -1066133466		,
-			"T" : 138547359		, "t" : -1740490624		,
-			"U" : 488162865		, "u" : -1131109376		,
-			"V" : 145278513		, "v" : -2041273344		,
-			"W" : 599442993		, "w" : 358269952		,
-			"X" : 581052977		, "x" : -1838898176		,
-			"Y" : 521094705		, "y" : -830003927		,
-			"Z" : 1042419999	, "z" : -1641923584
-		};
+	loadFont () {
+		// generate font set
+		let dummyCanvas = document.createElement("canvas"); dummyCanvas.width = this.font.width; dummyCanvas.height = this.font.height;
+		let dummyContxt = dummyCanvas.getContext("2d");
+		let SIZE = 8*3; //8;
+		let promises = [];
+		for (let i = 0 ; i < this.palette.length; i++ ) {
+			//to rgb 0-255
+			let rgb = [0,0,0].map((x,k) => {
+				return (parseInt(this.palette[i].substr(1,3),16) >> 4*(2-k) & 0xF)*17 ;
+			});
+			// draw bitmap somewhere to get image data
+			dummyContxt.drawImage(this.font, 0, 0);
+			let bitmap = dummyContxt.getImageData(0, 0, this.font.width, this.font.height);
+			let data = bitmap.data;
+			// coloring
+			for (let j = 0; j < data.length; j += 4 ) {
+				if (data[j+3] == 255) {
+					data[j]   = rgb[0];
+					data[j+1] = rgb[1];
+					data[j+2] = rgb[2];
+				}	
+			}
+			//create bitmaps
+			let out = [];
+			for (let j = 0; j < 720; j++) {
+				out.push(createImageBitmap(bitmap,(j%90)*SIZE,~~(j/90)*SIZE, SIZE, SIZE));
+			}
+			let lilprom = Promise.all(out).then(bitmaps => {
+				this.fontSet.push(bitmaps);
+			});
+			promises.push(lilprom);
+		}
+		Promise.all(promises).then( () => {
+			// 2DContext.drawImage will throw an error, so we copy this method when all bitmap finishes resolving.
+			this.text = this.text_;
+		});
+	}
+
+	setColor 		(number) {
+		this.context.fillStyle = this.context.strokeStyle = this.palette[number%this.palette.length];
+		this.currentColor = number%this.palette.length;
 	}
 
 	appendTo		(parent) {
@@ -52,7 +72,7 @@ class Graphics {
 
 	background 		(color) {
 		this.context.fillStyle = color;
-		this.context.fillRect(0,0, this.config.width, this.config.height);
+		this.context.fillRect(0,0, this.config.width, this.config.height);	
 	}
 
 	point			(x, y) {
@@ -92,45 +112,29 @@ class Graphics {
 		this.context.strokeRect(x+0.5, y+0.5, w, h);
 	}
 
-	// 5x6 pixel font.
-	text			(x, y, txt, f = 1) {
-		x |= 0 ; y |= 0;
-		let _ = this;
-		let lD = Graphics.lD();
-		let y0 = 0, x0 = 0;
-
+	text () {}
+	text_			(x, y, txt, f = 1) {
+		x |= 0; y |= 0;
+	
+		let x0 = 0; let y0 = 0;
 		[...txt.toString()].forEach(ltr => {
-			let i = 0;
-			let d = lD[ltr.toUpperCase()] || 0x3FFFFFFF; 
-			let spacing = ( d < 0 ) ? 5 : 6;
-			
-			if ( d === 1 ) { y0 += 10 * f; x0 = 0; return; }
-			if ( d === 2 ) { x0 += 2 * f; return; }
-			if ( d & 0x40000000 ) { i += 10; d &= 0x3FFFFFFF; }
+			if (ltr == '\n' && (y0 += 8)) 
+				return x0 = 0;
 
-			d <<= 1;
-			while (d >>= 1) { 
-				if (d & 1) _.point2(x + x0 + f*(i%5), y + y0 + f*~~(i/5), f);
-				i++;
-			}
-
-			x0 += spacing*f;
+			let index = this.fontMap.indexOf(ltr);
+			if (index == -1) return x0+=7;
+			this.context.drawImage(this.fontSet[this.currentColor][index], x + x0*f, y + y0*f, 8*f, 8*f);
+			x0 += 8;
 		});
+		
 	}
 
 	// returns [width, height] in pixels
-	static textSize		(txt, f = 1) {
-		let numLines = 1;
-		let lD = this.lD();
-
-		return [
-			[...txt].map(k => {
-					if (lD[k.toUpperCase()] === 1) {numLines++; return 0;}
-					else if (lD[k] === 2) return 2*f;
-					else return f*(6-(lD[k]<0)); 
-				}).reduce((a,b) => a+b),
-			f*(10*numLines - 3)
-		];
+	static textSize	(txt, f = 1) {
+		let width = txt.length * 8 * f;
+		let height = 8;
+		for (let i = 0; i < txt.length; i++)
+			height += txt.charAt(i) == "\n"? 8 : 0;
+		return [width, height];
 	}
-
 }

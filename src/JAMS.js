@@ -5,7 +5,7 @@ class JAMS {
 		this.modules 		= [];
 		this.midiModules 	= [];
 
-		this.g				= new Graphics({width: config.width, height: config.height});
+		this.g				= new Graphics({width: config.width, height: config.height, font: font}); //font exists because <img id=font>
 		this.interface		= new Interface(this.g);
 		this.desktop		= new Desktop(this.g, this.modules);
 		this.mouseListeners = new ListenerList(this.g.DOMElement, ["mousedown", "mouseup", "mousemove"]);
@@ -284,12 +284,13 @@ class JAMS {
 					},{
 						text: "About",
 						callback: () => {
-							let win = new InterfaceWindow({ title: "About", x: x, y: y, w: 400, h: 130, isResizable: false});
+							let win = new InterfaceWindow({ title: "About", x: x, y: y, w: 400, h: 150, isResizable: false});
 
 							win
 							.appendChild(new WindowText({ content: "JAMS", fontSize: 3, wh: 50, ww: 1}))
 							.appendChild(new WindowText({ content: "JAMS - A Modular System", fontSize: 2, wh: 20, ww: 1}))
 							.appendChild(new WindowText({ content: "Fork me at github.com/khoin/JAMS ", fontSize: 1, wh: 40, ww: 1}))
+							.appendChild(new WindowPalette({ palette: this.g.palette, wh: 20, ww: 1}));
 
 							this.interface.add(win);
 						}

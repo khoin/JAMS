@@ -29,10 +29,10 @@ class WindowButton extends InterfaceWindowComponent {
 		if (this.isHovered) {
 			g.context.fillStyle = "#fff";
 			g.context.fillRect(0, 0, w, h);
-			g.context.fillStyle = "#000";
+			g.setColor(0);
 			g.text(3, 3, this.content, this.fontSize);
 		} else {
-			g.context.fillStyle = this.fontColor;
+			g.setColor(1);
 			g.text(3, 3, this.content, this.fontSize);
 			g.box(0, 0, w, h);
 		}

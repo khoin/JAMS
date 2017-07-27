@@ -6,8 +6,8 @@ Modules.Rand = class Rand extends AudioModule {
 
 		this.numberOfInputs	= 1;
 		this.numberOfOutputs= 1;
-		this.color			= 5; 
-		this.width			= 30; 
+		this.color			= 3; 
+		this.width			= 32; 
 		this.height			= 15;
 		this.name			= "linear decay";
 		this.helpText		=

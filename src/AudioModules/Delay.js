@@ -7,7 +7,7 @@ Modules.Delay = class Delay extends AudioModule {
 
 		this.numberOfInputs	= 2;
 		this.numberOfOutputs= 1;
-		this.color			= 130; 
+		this.color			= 4; 
 		this.width			= 60; 
 		this.height			= 30;
 		this.name			= "Delay";
@@ -24,10 +24,8 @@ Modules.Delay = class Delay extends AudioModule {
 	}
 
 	interface	(g, args) {
-		let portSize = args.portSize;
-		let anchor   = portSize/2 - 3;
-		g.text(3, anchor, "INPUT");
-		g.text(3, anchor + portSize, "LENGTH");
+		g.text(3, 5, "INPUT");
+		g.text(3, 18, "LENGTH");
 	}
 	
 	run			(t, z, a) {

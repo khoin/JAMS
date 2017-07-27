@@ -6,7 +6,7 @@ Modules.Clock = class Clock extends AudioModule {
 
 		this.numberOfInputs = 0;
 		this.numberOfOutputs= 2;
-		this.color 			= 40; 
+		this.color 			= 7; 
 		this.width 			= 60; 
 		this.height 		= 30;
 		this.name 			= "clock";
@@ -23,8 +23,8 @@ Return times in seconds or pulses
 	}
 
 	interface	(g, args) {
-		g.text(20, 5 , "SECOND");
-		g.text(20, 18, "PULSES");
+		g.text(5, 5 , "SECOND");
+		g.text(5, 18, "PULSES");
 	}
 	
 	run			(t, z, a) {

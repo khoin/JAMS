@@ -125,7 +125,7 @@ class InterfaceContextMenu extends InterfaceElement {
 				g.context.fillRect(0, i*boxHeight, node.width, boxHeight);
 			}
 
-			g.context.strokeStyle = g.context.fillStyle = "#fff";
+			g.setColor(1);
 			g.box(0, y, node.width, boxHeight);
 			g.text(this.padding, y + this.padding, child.text);
 

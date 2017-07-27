@@ -108,8 +108,7 @@ class InterfaceWindow extends InterfaceElement {
 		g.context.fillStyle 	= "#000";
 		g.context.fillRect(0, 0, this.w, this.h);
 
-		g.context.strokeStyle 	= "#fff";
-		g.context.fillStyle 	= "#fff";
+		g.setColor(1);
 		g.box	(0		, 0	, this.w	, this.h);
 		// Title Box
 		g.context.lineWidth = 1;

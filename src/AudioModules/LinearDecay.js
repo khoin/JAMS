@@ -6,7 +6,7 @@ Modules.LinearDecay = class LinearDecay extends AudioModule {
 
 		this.numberOfInputs	= 2;
 		this.numberOfOutputs= 1;
-		this.color			= 37; 
+		this.color			= 7; 
 		this.width			= 30; 
 		this.height			= 30;
 		this.name			= "linear decay";

@@ -51,9 +51,9 @@ class WindowTextField extends InterfaceWindowComponent {
 
 		let chunks = this.inputBuffer.split("\n");
 		
-		g.context.fillStyle = (this.isTyping)? "#fff" : "#000";
+		g.setColor(~~this.isTyping)
 		g.context.fillRect(1, 1, w-1.5, ~~h-1);
-		g.context.fillStyle = (this.isTyping)? "#000" : "#fff";
+		g.setColor(1-~~this.isTyping)
 		g.text(2, 2, chunks[chunks.length - 1]);
 
 	}

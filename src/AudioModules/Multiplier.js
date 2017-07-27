@@ -6,7 +6,7 @@ Modules.Multiplier = class Multiplier extends AudioModule {
 
 		this.numberOfInputs	= 2;
 		this.numberOfOutputs= 1;
-		this.color			= 80; 
+		this.color			= 3; 
 		this.width			= 30; 
 		this.height			= 30;
 		this.name			= "multiplier";
@@ -18,7 +18,7 @@ Default signal for either input is zero.
 	}
 
 	interface	(g) {
-		g.text(13, 12, "*",2);
+		g.text(12, 12, "×", 1);
 	}
 	
 	run			(t, z, a) {
