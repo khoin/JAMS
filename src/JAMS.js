@@ -44,7 +44,7 @@ class JAMS {
 			children: ["Sequencer16", "Switch"]
 		},{
 			name: "Envelopes",
-			children: ["LinearDecay"]
+			children: ["LinearAD"]
 		},{
 			name: "Sampling",
 			children: ["Sampler"]
@@ -53,7 +53,7 @@ class JAMS {
 			children: ["Flange", "Delay"]
 		},{
 			name: "Misc",
-			children: ["QuadMixer", "Scope", "XYScope", "MonoMerge"]
+			children: ["QuadMixer", "Scope", "XYScope", "Readout", "TextDisplay", "MonoMerge"]
 		}];
 		
 		this.outputModule = this.createModule(~~(innerWidth/2), ~~(innerHeight/2), Modules.Output);
@@ -85,26 +85,7 @@ class JAMS {
 
 		// MIDI Error Window
 		let mid = new MIDI(error => {
-			let win = new InterfaceWindow({
-				x: ~~(innerWidth/2), y: ~~(innerHeight/2),
-				w: 350, h: 100,
-				title: "No MIDI"
-			});
-
-			win
-			.appendChild(new WindowText({
-				ww: 1, wh: 30,
-				content: "Your browser does not support MIDI.",
-				fontSize: 2
-			}))
-			.appendChild(new WindowButton({
-				ww: 1, wh: 30,
-				content: "Acknowledged",
-				fontSize: 2,
-				callback: () => win.close()
-			}));
-
-			this.interface.add(win);
+			this.alert("Your browser does not support MIDI");
 		});
 
 		mid.on('any', (a,e) => { 
@@ -176,7 +157,7 @@ class JAMS {
 						},{
 							text: "Parameters",
 							callback: () => {
-								let win = new InterfaceWindow({ title: `${currentModule.name} Parameters`, x: x, y: y, w: 200, h: 200, isResizable: true });
+								let win = new InterfaceWindow({ title: `${currentModule.name} Parameters`, x: x, y: y, w: 400, h: 200, isResizable: true });
 
 								win
 								.appendChild(new WindowText({
@@ -196,6 +177,13 @@ class JAMS {
 									}));
 
 									switch(par.type) {
+										case "text":
+											win.appendChild(new WindowTextField({
+												ww: 1/2, wh: 30, 
+												getValue: () => par.value,
+												setValue: x => par.value = x
+											}))
+										break;
 										case "number":
 											win.appendChild(new WindowNumber({
 												ww: 1/2, wh: 30,
@@ -284,12 +272,15 @@ class JAMS {
 					},{
 						text: "About",
 						callback: () => {
-							let win = new InterfaceWindow({ title: "About", x: x, y: y, w: 400, h: 150, isResizable: false});
+							let win = new InterfaceWindow({ title: "About", x: x, y: y, w: 400, h: 170, isResizable: false});
 
 							win
 							.appendChild(new WindowText({ content: "JAMS", fontSize: 3, wh: 50, ww: 1}))
 							.appendChild(new WindowText({ content: "JAMS - A Modular System", fontSize: 2, wh: 20, ww: 1}))
 							.appendChild(new WindowText({ content: "Fork me at github.com/khoin/JAMS ", fontSize: 1, wh: 40, ww: 1}))
+							.appendChild(new WindowButton({ content: "Repository", wh: 20, ww: 0.333, callback: () => {window.open("https://github.com/khoin/JAMS")} }))
+							.appendChild(new WindowButton({ content: "Acknowledgements", wh: 20, ww: 0.333, callback: () => {window.open("http://jams.systems/#acknowledgements")} }))
+							.appendChild(new WindowButton({ content: "Examples", wh: 20, ww: 0.333, callback: () => {window.open("http://jams.systems/examples")} }))
 							.appendChild(new WindowPalette({ palette: this.g.palette, wh: 20, ww: 1}));
 
 							this.interface.add(win);
@@ -355,7 +346,7 @@ class JAMS {
 
 	newSetup() {
 		this.modules.splice(0,this.modules.length);
-		this.outputModule = this.createModule(innerWidth-100, 100, Modules.Output);
+		this.outputModule = this.createModule(innerWidth/2, innerHeight/2, Modules.Output);
 	}
 
 	exportSetup		() {
@@ -379,14 +370,7 @@ class JAMS {
 				new WindowButton({ ww: 1 , wh: 20,
 					content: "SAVE", 
 					callback: () => {
-						/**
-						let saver = document.createElement("a");
-						saver.download = "JAMS-"+fileName+".json";
-						saver.href="data:application/json,"+this.saveSetupToJSON();
-						saver.click();
-						**/
-						let file = new File([this.saveSetupToJSON()], "JAMS-"+fileName+".json", {type: "data:application/json;charset=utf-8"});
-						saveAs(file);
+						saveAs(new File([this.saveSetupToJSON()], "JAMS-"+fileName+".json", {type: "data:application/json;charset=utf-8"}));
 					}
 				})
 			)
@@ -408,6 +392,39 @@ class JAMS {
 			
 		});
 		opener.click();
+	}
+
+	openSetupFromUrl (url) {
+		fetch(url).then(response => {
+			if (response.ok)
+				return response.text()
+			this.alert("Failed loading setup from URL");
+		}).then(data => {
+			this.loadSetup(data);
+		});
+	}
+
+	alert 		(message, title = "Alert") { //this is synonymous to window.alert of the DOM
+		let win = new InterfaceWindow({
+				x: ~~(innerWidth/2), y: ~~(innerHeight/2),
+				w: 370, h: 100,
+				title: title
+			});
+
+			win
+			.appendChild(new WindowText({
+				ww: 1, wh: 30,
+				content: message,
+				fontSize: 1
+			}))
+			.appendChild(new WindowButton({
+				ww: 1, wh: 30,
+				content: "OK!",
+				fontSize: 1,
+				callback: () => win.close()
+			}));
+
+			this.interface.add(win);
 	}
 
 	saveSetupToJSON() {

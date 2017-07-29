@@ -6,7 +6,7 @@ Modules.Output = class JAMSOutput extends AudioModule {
 
 		this.numberOfInputs		= 1;
 		this.numberOfOutputs	= 0;
-		this.color				= 10;
+		this.color				= 6;
 		this.width				= 32;
 		this.height				= 15;
 		this.name				= "OUT";

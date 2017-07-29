@@ -7,7 +7,7 @@ Modules.XYScope = class XYScope extends AudioModule {
 
 		this.numberOfInputs	= 1;
 		this.numberOfOutputs= 0;
-		this.color			= 337; 
+		this.color			= 1; 
 		this.width			= 45; 
 		this.height			= 45;
 		this.name			= "xyscope";

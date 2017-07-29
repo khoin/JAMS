@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JAMS</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		html, body { width: 100%; height: 100%; overflow: hidden; padding: 0; margin: 0; font: bold 25px monospace; background: #aaa;}
+		canvas {image-rendering: pixelated;}
+	</style>
+</head>
+<body>
+<img id="font" crossorigin="anonymous" style="display:none;" src="src/misaki3x.png">
+<script src="src/Utils/WaveReader.js"></script>
+<script src="src/Utils/FileSaver.min.js"></script>
+<script src="src/MIDI.js"></script>
+
+<script src="src/ListenerList.js"></script>
+<script src="src/Graphics.js"></script>
+<script src="src/Desktop.js"></script>
+
+<script src="src/Interface.js"></script>
+<script src="src/InterfaceElements/InterfaceWindow.js"></script>
+<script src="src/InterfaceElements/InterfaceContextMenu.js"></script>
+<script src="src/InterfaceElements/WindowComponents/WindowPalette.js"></script>
+<script src="src/InterfaceElements/WindowComponents/WindowText.js"></script>
+<script src="src/InterfaceElements/WindowComponents/WindowNumber.js"></script>
+<script src="src/InterfaceElements/WindowComponents/WindowTextField.js"></script>
+<script src="src/InterfaceElements/WindowComponents/WindowButton.js"></script>
+<script src="src/InterfaceElements/WindowComponents/WindowCheckBox.js"></script>
+<script src="src/InterfaceElements/WindowComponents/WindowFileUpload.js"></script>
+
+<script src="src/AudioModule.js"></script>
+<script src="src/AudioModules/Output.js"></script>
+<script async src="src/AudioModules/SineOSC.js"></script>
+<script async src="src/AudioModules/Multiplier.js"></script>
+<script async src="src/AudioModules/Number.js"></script>
+<script async src="src/AudioModules/Clock.js"></script>
+<script async src="src/AudioModules/ClockDivider.js"></script>
+<script async src="src/AudioModules/Delay.js"></script>
+<script aynsc src="src/AudioModules/Remainder.js"></script>
+<script async src="src/AudioModules/Plus.js"></script>
+<script async src="src/AudioModules/Note2Freq.js"></script>
+<script async src="src/AudioModules/LinearAD.js"></script>
+<script async src="src/AudioModules/MonoMerge.js"></script>
+<script async src="src/AudioModules/QuadMixer.js"></script>
+<script async src="src/AudioModules/Scope.js"></script>
+<script async src="src/AudioModules/Readout.js"></script>
+<script async src="src/AudioModules/TextDisplay.js"></script>
+<script async src="src/AudioModules/XYScope.js"></script>
+<script async src="src/AudioModules/Rand.js"></script>
+<script async src="src/AudioModules/Sequencer16.js"></script>
+<script async src="src/AudioModules/Switch.js"></script>
+<script async src="src/AudioModules/Sampler.js"></script>
+<script async src="src/AudioModules/Flange.js"></script>
+
+<script src="src/JAMS.js"></script>
+
+<script>
+// ----
+try { 
+	var app = new JAMS({width: innerWidth, height: innerHeight}).appendTo(document.body);
+	app.init();
+
+	// load setup if available
+	let hash = window.location.hash.split("#");
+	if (hash[1] == "load") 
+		app.openSetupFromUrl(hash[2])
+	
+} catch(e) {
+	document.write('There was an Error loading JAMS: <br>');
+	document.write(e);
+	console.log(e);
+}
+</script>
+</body>
+</html>

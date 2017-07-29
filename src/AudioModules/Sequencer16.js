@@ -46,7 +46,7 @@ A Sequencer16
 		g.line(0, 60, this.width, 60);
 		g.text(5, this.height - 10, "SEQ16");
 
-		g.context.fillStyle = "#000";
+		g.setColor(0);
 		g.text(	8 - (Graphics.textSize(""+(~~this.params[0].value[this.position]))[0]/2) + 15 * (this.position%4), 
 				5 + 15 * ~~(this.position/4), 
 				~~this.params[0].value[this.position])

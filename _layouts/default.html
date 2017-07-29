@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ page.title }}</title>
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style type="text/css">
+		body { margin: 3% auto; padding: 10px; max-width: 700px; font-family: 'Source Sans Pro', sans-serif; color: #eee; background: #111;}
+		footer { padding: 40px 0; border-top: 1px solid #ccc; font-style: italic; }
+		section { padding: 40px 0; }
+		nav > a { display: inline-block; background: #111; color: #eee; text-decoration: none; padding: .7em 1em; margin: .7em 0; box-shadow: 0 3px 0 0 #444; }
+		nav > a:hover { background: #333; }
+		nav > a:nth-child(1) { box-shadow: 0 3px 0 0 #FF0; }
+		nav > a:nth-child(2) { box-shadow: 0 3px 0 0 #F0F; }
+		nav > a:nth-child(3) { box-shadow: 0 3px 0 0 #0FF; }
+		nav > a:nth-child(4) { box-shadow: 0 3px 0 0 #0F8; }
+		nav > a:nth-child(5) { box-shadow: 0 3px 0 0 #F80; }
+		img {max-width: 100%;}
+		a { color: #eee; }
+	</style>
+</head>
+<body>
+	<header>
+		<h1>JAMS: Just A Modular System</h1>
+	</header>
+	<nav>
+		<a class="btn" href="/">Home</a>
+		<a class="btn" href="/examples">Examples</a>
+		<a class="btn" href="/docs">Documentation</a>
+		<a class="btn" href="/history">Development</a>
+		<a class="btn" href="/app">Launch App</a>
+	</nav>
+	<section>
+		{{ content }}
+	</section>
+	<footer>
+		Hosted on <a href="https://pages.github.com">GitHub Pages</a>. Served by <a href="https://jekyllrb.com/">Jekyll</a>.
+	</footer>
+</body>
+</html>

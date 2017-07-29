@@ -7,7 +7,7 @@ Modules.Scope = class Scope extends AudioModule {
 
 		this.numberOfInputs	= 1;
 		this.numberOfOutputs= 0;
-		this.color			= 237; 
+		this.color			= 1; 
 		this.width			= 60; 
 		this.height			= 30;
 		this.name			= "scope";

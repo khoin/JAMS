@@ -7,7 +7,7 @@ Modules.SineOSC = class SineOSC extends AudioModule {
 
 		this.numberOfInputs 	= 2;
 		this.numberOfOutputs	= 1;
-		this.color				= 100;
+		this.color				= 5;
 		this.width 				= 40;
 		this.height 			= 30;
 		this.name 				= "SINE OSC";

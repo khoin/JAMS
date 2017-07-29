@@ -43,13 +43,15 @@ class WindowNumber extends InterfaceWindowComponent {
 	}
 
 	render			(g, w, h) {
-		g.context.fillStyle = g.context.strokeStyle = "#fff";
+		g.setColor(1);
 		g.box(0, 0, w, h);
+
+		let charle = ~~(w/8);
 		
 		g.setColor(~~this.isTyping)
-		g.context.fillRect(1, 1, w-1, h-1);
+		g.fillBox(1, 1, w-1, h-1);
 		g.setColor(1-~~this.isTyping)
-		g.text(2, 2, (this.inputBuffer.length > 15)? "..." + this.inputBuffer.substr(-15) : this.inputBuffer);
+		g.text(2, 2, (this.inputBuffer.length > charle)? "..." + this.inputBuffer.substr(-charle+3) : this.inputBuffer.toString().substr(0,charle));
 
 	}
 }

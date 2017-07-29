@@ -6,7 +6,7 @@ Modules.Remainder = class Remainder extends AudioModule {
 
 		this.numberOfInputs = 2;
 		this.numberOfOutputs= 1;
-		this.color 			= 180; 
+		this.color 			= 3; 
 		this.width 			= 30; 
 		this.height 		= 30;
 		this.name 			= "remainder";
@@ -21,7 +21,7 @@ E.g: 10 % 4 = 2;
 	}
 
 	interface		(g, args) {
-		g.text(11, 8, "%", 2);
+		g.text(12, 12, "%", 1);
 	}
 
 	run				(t, z, a) {

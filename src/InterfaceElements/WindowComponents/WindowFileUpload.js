@@ -46,12 +46,12 @@ class WindowFileUpload extends InterfaceWindowComponent {
 	}
 
 	render			(g, w, h) {
-		g.context.fillStyle = g.context.strokeStyle = "#fff";
-		g.text(32, 2, this.fileName);
-		g.box(0, 0, 26, h);
+		g.setColor(1);
+		g.text(42, 2, this.fileName);
+		g.box(0, 0, 36, h);
 		if (this.isHovered) {
-			g.context.fillRect(0, 0, 26, h);
-			g.context.fillStyle = "#000";
+			g.context.fillRect(0, 0, 36, h);
+			g.setColor(0)
 			g.text(2, 2, "OPEN");
 
 		} else {

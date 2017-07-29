@@ -7,8 +7,8 @@ Modules.Sampler = class Sampler extends AudioModule {
 
 		this.numberOfInputs	= 4;
 		this.numberOfOutputs= 1;
-		this.color			= 55; 
-		this.width			= 60; 
+		this.color			= 5; 
+		this.width			= 80; 
 		this.height			= 75;
 		this.name			= "sampler";
 		this.helpText		=
@@ -68,12 +68,12 @@ Basic WAV sampler.
 	}
 
 	eMouseDown	(x, y) { 
-		if ( x > 30 && x < 60 && y < 15 )
+		if ( x > 40 && x < 80 && y < 15 )
 			this.params[2].value = !this.params[2].value;
 	}
 
 	interface	(g) {
-		g.box(30, 0, 30, 15);
+		g.box(40, 0, 40, 15);
 		g.text(4, 5, "RATE");
 		g.text(4, 20,"BEGN");
 		g.text(4, 35,"END");
@@ -86,13 +86,12 @@ Basic WAV sampler.
 		g.context.fillRect(~~(this.width*this.position/this.len), 60, 1, 15);
 		
 		if (this.params[2].value) {
-			g.context.fillRect(30, 0, 30, 15);
-			g.context.fillStyle = "#000";
-			g.text(34, 5, "LOOP");
+			g.context.fillRect(40, 0, 40, 16);
+			g.setColor(0)
+			g.text(44, 5, "LOOP");
 		} else {
-			g.text(34, 5, "LOOP");
+			g.text(44, 5, "LOOP");
 		}
-
 	}
 
 	clamp (x) {
@@ -103,29 +102,30 @@ Basic WAV sampler.
 		const data = this.params[0].value;
 		const l = data[0].length;
 
-		let speed	= this.getInput(0, t, 1)[0] !== 0 ? this.getInput(0, t, 1)[0] : this.params[1].value;
-		let start	= this.clamp( this.getInput(1, t, 1)[0] );
-		let end 	= this.getInput(2, t, 1)[0] !== 0 ? this.clamp( this.getInput(2, t, 1)[0] ) * l : l;
-		let trigger	= this.getInput(3, t, 1)[0] > 0.9;
-		
 		const delta = (this.realPosition - this.position);
 		if (z == 1)
 			return [
 				data[0][this.position] + delta * (data[0][(this.position + 1) % l] - data[0][this.position]) , 
 				data[1][this.position] + delta * (data[1][(this.position + 1) % l] - data[1][this.position])
 			];
+
+		let speed	= this.getInput(0, t, 1)[0] !== 0? this.getInput(0, t, 1)[0] : this.params[1].value;
+		let start	= this.getInput(1, t, 1)[0] !== 0? this.clamp( this.getInput(1, t, 1)[0] ) * l : 0;
+		let end 	= this.getInput(2, t, 1)[0] !== 0? this.clamp( this.getInput(2, t, 1)[0] ) * l - 1 : l - 1;
+		let trigger	= this.getInput(3, t, 1)[0] > 0.95;
 		
+		// trigger
+		if (trigger) 
+			return this.realPosition = this.position = start;
+
 		// No Loop
-		if (!this.params[2].value && this.position > end - 1) return;
-
+		if (!this.params[2].value && ((speed > 0 && this.realPosition > end) || (speed < 0 && this.realPosition < start)) ) return;
+		
 		// Wrap
-		if (this.position < start) this.realPosition = end - 1;
+		if (this.realPosition < start) this.realPosition = end;
+		if (this.realPosition > end) this.realPosition = start;
 
-		this.realPosition =
-			(trigger || (speed > 0 && this.position > end) || (speed < 0 && this.position < end))? 
-				(this.getInput(1, t, 1)[0]*data[0].length || 1) 
-			: 
-				(this.realPosition + this.adjustedRate * speed) % l;
+		this.realPosition = this.realPosition + this.adjustedRate * speed;
 
 		this.position = ~~(this.realPosition) % l;
 		
