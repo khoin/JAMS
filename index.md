@@ -3,7 +3,7 @@ layout: default
 title: JAMS - Just A Modular System
 ---
 
-**JAMS** is a **J**ust **A** **M**odular **S**ystem written in Javascript, and runs in your Web browser. It currently makes use of the deprecating Web Audio's [ScriptProcessorNode](https://developer.mozilla.org/en-US/docs/Web/API/ScriptProcessorNode).
+**JAMS** is a **J**ust **A** **M**odular **S**ystem written in Javascript, and runs in your Web browser. It currently makes use of the deprecating Web Audio's [ScriptProcessorNode](https://developer.mozilla.org/en-US/docs/Web/API/ScriptProcessorNode). Check out the GitHub [repo](https://github.com/khoin/JAMS)!
 
 Please lower your speaker/headphones volume before opening the app.
 
