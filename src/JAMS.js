@@ -292,10 +292,11 @@ class JAMS {
 	}
 
 	render 		() {
-		requestAnimationFrame(this.render.bind(this));
+		
 		this.g.background("#000");
 		this.desktop.render();
 		this.interface.render();
+		requestAnimationFrame(this.render.bind(this));
 	}
 
 	audioLoop	(t) {

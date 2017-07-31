@@ -82,7 +82,7 @@ This is my first big project in programming after [Pascal Draw](https://github.c
 
 * __May 12__ Patch [[CLIP](https://www.instagram.com/p/BUBbrxDD-VE/)]
 
-* ___DSP for Flanger received from Werner___
+* ___DSP for Flanger received from Werner. Discussion with roommate about WAV. Apparently, even though WAVE is a simple format, I thought they were stored in floating points at first. It made much more sense when he mentioned that it's stored as integers.___
 
 * __May 20__ Sampler implemented [[CLIP](https://www.instagram.com/p/BUTtfTaD67n/?taken-by=p07a)]  [[VIDEO](https://www.youtube.com/watch?v=0pHITFYDOn8)]
 

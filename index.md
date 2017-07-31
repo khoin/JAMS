@@ -29,4 +29,5 @@ JAMS would not be possible without the help and inspiration from:
 * Werner Van Belle from [BpmDj](http://bpmdj.yellowcouch.org/) for tips on feedback sine phase modulation and Flange.
 * [Audiotool](https://audiotool.com/) team and friends for motivation and inspiration for electronic music and experimental music.
 * @stagas from [Wavepot](https://wavepot.com/) for my first playground into DSP. Some modules in JAMS have code borrowed from [OpenDSP](https://github.com/opendsp).
-* my roommate for suggestions on stereo data flow.
+* my roommate for suggestions on stereo data flow and WAV decoding.
+* @mog for MIDI helper class
