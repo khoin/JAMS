@@ -5,8 +5,8 @@ Modules.Sequencer16 = class Sequencer16 extends AudioModule {
 		this.className = "Sequencer16";
 		this.prerun		= true;
 
-		this.numberOfInputs	= 1;
-		this.numberOfOutputs= 1;
+		this.numberOfInputs	= 2;
+		this.numberOfOutputs= 2;
 		this.color			= 70; 
 		this.width			= 60; 
 		this.height			= 75;
@@ -53,8 +53,15 @@ A Sequencer16
 	}
 	
 	run			(t, z, a) {
+		if (a == 1 && this.position == 0) return [1,1];
 		if (!this.inputs[0]) return [this.params[0].value[0], 0];
-		if (z == 1) return [~~this.params[0].value[this.position], 0];
-		this.position = (this.getInput(0, t, 1)[0] > 0.9)? (this.position + 1)%16 : this.position;
+		if (z == 1 && a == 0) return [~~this.params[0].value[this.position], 0];
+
+		if (this.getInput(0, t, 1)[0] > 0.9) {
+			this.position = (this.position + 1)%16;
+		} else if (this.getInput(1, t, 1)[0] > 0.9) {
+			this.position = 0;
+		}
+		return [0,0];
 	}
 }

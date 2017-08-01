@@ -292,7 +292,6 @@ class JAMS {
 	}
 
 	render 		() {
-		
 		this.g.background("#000");
 		this.desktop.render();
 		this.interface.render();
