@@ -267,7 +267,7 @@ class JAMS {
 	}
 
 	openSetupFromUrl (url) {
-		let win = alert("Loading Setup...");
+		let win = this.alert("Loading Setup...");
 		fetch(url).then(response => {
 			if (response.ok)
 				return response.text()
