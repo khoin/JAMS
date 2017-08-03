@@ -1,1 +1,0 @@
-<p onmousemove=b.innerHTML+='​╱╲'[event.screenX%3] id=b>Hi
