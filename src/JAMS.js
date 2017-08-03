@@ -267,12 +267,14 @@ class JAMS {
 	}
 
 	openSetupFromUrl (url) {
+		let win = alert("Loading Setup...");
 		fetch(url).then(response => {
 			if (response.ok)
 				return response.text()
 			this.alert("Failed loading setup from URL");
 		}).then(data => {
 			this.loadSetup(data);
+			win.close();
 		});
 	}
 
@@ -297,6 +299,7 @@ class JAMS {
 			}));
 
 			this.interface.add(win);
+		return win;
 	}
 
 	saveSetupToJSON() {
