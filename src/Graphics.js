@@ -12,7 +12,7 @@ class Graphics {
 
 		this.context     = this.DOMElement.getContext("2d");
 
-		this.palette = ["#000", "#FFF", "#FF0", "#F0F", "#0FF", "#0F8", "#F80", "#F08"];
+		this.palette = ["#000", "#FFF", "#FF0", "#F0F", "#0FF", "#0F8", "#F80", "#F08", "#333"];
 		this.currentColor = 1;
 
 		this.font = config.font; //bitmap

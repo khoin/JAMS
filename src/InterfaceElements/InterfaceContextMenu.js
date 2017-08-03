@@ -2,7 +2,7 @@ class InterfaceContextMenu extends InterfaceElement {
 	constructor			(con) {
 		super(con);
 
-		this.padding 	= 3;
+		this.padding 	= con.padding || 3;
 		this.top 		= InterfaceContextMenu.preCalc(con.options, true, this.padding);
 
 		this.w 			= this.top.width;
@@ -85,9 +85,9 @@ class InterfaceContextMenu extends InterfaceElement {
 		this.parent.remove(this);
 	}
 
-	eMouseMove			(e) { 
-		const	x = e.clientX - this.x,
-				y = e.clientY - this.y;
+	eMouseMove			(e, x, y) { 
+		x = x - this.x,
+		y = y - this.y;
 
 		this.w = this.top.width;
 		this.h = this.top.height;

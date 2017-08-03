@@ -6,7 +6,7 @@ class InterfaceSprinkles extends InterfaceElement {
 
 		this.bucket = [];
 		this.bypassMouseDown = true;
-		this.i = 0;;
+		this.i = 0;
 	}
 
 	eMouseMove	(e) {

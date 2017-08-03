@@ -14,6 +14,7 @@
 <script src="src/Utils/FileSaver.min.js"></script>
 <script src="src/MIDI.js"></script>
 
+<script src="src/ApplicationPreference.js"></script>
 <script src="src/ListenerList.js"></script>
 <script src="src/Graphics.js"></script>
 <script src="src/Desktop.js"></script>
@@ -21,6 +22,10 @@
 <script src="src/Interface.js"></script>
 <script src="src/InterfaceElements/InterfaceWindow.js"></script>
 <script src="src/InterfaceElements/InterfaceContextMenu.js"></script>
+<script src="src/InterfaceElements/InterfaceMenuBar.js"></script>
+<script src="src/InterfaceElements/WindowComponents/WindowColor.js"></script>
+<script src="src/InterfaceElements/WindowComponents/WindowIntegerSlider.js"></script>
+<script src="src/InterfaceElements/WindowComponents/WindowListOptions.js"></script>
 <script src="src/InterfaceElements/WindowComponents/WindowPalette.js"></script>
 <script src="src/InterfaceElements/WindowComponents/WindowText.js"></script>
 <script src="src/InterfaceElements/WindowComponents/WindowNumber.js"></script>
@@ -54,6 +59,7 @@
 <script async src="src/AudioModules/Flange.js"></script>
 
 <script src="src/JAMS.js"></script>
+<script src="src/JAMS.Interactions.js"></script>
 
 <script>
 // ----
@@ -69,6 +75,7 @@ try {
 } catch(e) {
 	document.write('There was an Error loading JAMS: <br>');
 	document.write(e);
+	document.write('<br>You can try resetting the preference: <a href="#" onclick=localStorage.removeItem("JAMSPreference")>by clicking here</a> then refresh')
 	console.log(e);
 }
 </script>

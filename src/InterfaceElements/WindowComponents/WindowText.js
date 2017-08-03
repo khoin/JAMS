@@ -6,13 +6,13 @@ class WindowText extends InterfaceWindowComponent {
 		this.fontColor	= con.fontColor|| 1;
 
 		let dimensions	= Graphics.textSize(this.content, this.fontSize);
-		this.w 			= dimensions[0];
+		this.w 			= con.align=="left"? 0.9 : dimensions[0];
 		this.h			= dimensions[1];
 
 		this.border		= false;
 	}
 
-	render			(g, w, h) {
+	render			(g, w, h, ww) {
 		g.setColor(this.fontColor);
 		g.text(0, 0, this.content, this.fontSize);
 		if (this.border)

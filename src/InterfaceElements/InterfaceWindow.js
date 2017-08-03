@@ -71,8 +71,8 @@ class InterfaceWindow extends InterfaceElement {
 			this.parent.g.DOMElement.style.cursor = "se-resize";
 
 		if (this.isResizing) {
-			this.w += (this.w + e.movementX > 70) * e.movementX;
-			this.h += (this.h + e.movementY > 70) * e.movementY;
+			this.w += (this.w + e.movementX > 220) * e.movementX;
+			this.h += (this.h + e.movementY > 200) * e.movementY;
 		}
 
 		if (this.isDragging) {
@@ -90,8 +90,10 @@ class InterfaceWindow extends InterfaceElement {
 		}
 	}
 
-	eMouseUp		() {
+	eMouseUp		(e) {
 		this.isDragging = this.isResizing = false;
+		for (let i = 0; i < this.children.length; i++)
+			this.children[i].eMouseUp(e);
 	}
 
 	eKeyDown		(e) { 
@@ -178,7 +180,7 @@ class InterfaceWindow extends InterfaceElement {
 			g.context.save();
 			//g.box(0offsetX, 20 + offsetY, ww, wh);
 			g.context.translate(child._absX, child._absY);
-				child.render(g, child._absW, child._absH);
+				child.render(g, child._absW, child._absH, ww);
 			g.context.restore();
 
 			currentRowHeight = Math.max(currentRowHeight, wh);
@@ -225,5 +227,5 @@ class InterfaceWindowComponent {
 	eMouseMove		(x, y) {}
 	eMouseOut		() {}
 	eKeyDown		(e) {}
-	render			(g) {}
+	render			(g, w, h) {}
 }

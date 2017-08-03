@@ -56,9 +56,11 @@ class Interface {
 	}
 
 	eMouseMove (e) {
+		const x = e.clientX;
+		const y = e.clientY;
 		this.g.DOMElement.style.cursor = "auto";
 		for ( let i = 0; i < this.elementList.length; i++ ) 
-			this.elementList[i].eMouseMove(e);
+			this.elementList[i].eMouseMove(e, x, y);
 	}
 
 	eKeyDown (e) {
@@ -88,6 +90,6 @@ class InterfaceElement {
 	eKeyDown	(e) {}
 	eUnfocus	(e) {}
 	eMouseUp	(e) {}
-	eMouseMove	(e) {}
+	eMouseMove	(e, x, y) {}
 	render		(g) {}
 }

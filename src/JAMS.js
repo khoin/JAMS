@@ -5,6 +5,7 @@ class JAMS {
 		this.modules 		= [];
 		this.midiModules 	= [];
 
+		this.preferences	= new ApplicationPreference();
 		this.g				= new Graphics({width: config.width, height: config.height, font: font}); //font exists because <img id=font>
 		this.interface		= new Interface(this.g);
 		this.desktop		= new Desktop(this.g, this.modules);
@@ -15,7 +16,7 @@ class JAMS {
 		// Audio
 		this.aC = (config.audioContext instanceof AudioContext)? config.audioContext : new AudioContext();
 		window.sampleRate = this.aC.sampleRate;
-		this.processor = this.aC.createScriptProcessor(2048, 0, 2);
+		this.processor = this.aC.createScriptProcessor(this.preferences.getItem("bufferSize"), 0, 2);
 		let splitter	= this.aC.createChannelSplitter();
 		let merger		= this.aC.createChannelMerger();
 
@@ -25,6 +26,10 @@ class JAMS {
 		merger.connect(this.aC.destination);
 
 		this.t = 0;
+		this.frameCount = 0;
+
+		this.outputModule = this.createModule(~~(innerWidth/2), ~~(innerHeight/2), Modules.Output);
+		this.interface.add(new InterfaceMenuBar({menus : JAMS.Interactions.menuBarMenus, app: this}));
 
 		//plugins
 		this.plugins = [{
@@ -55,8 +60,6 @@ class JAMS {
 			name: "Misc",
 			children: ["QuadMixer", "Scope", "XYScope", "Readout", "TextDisplay", "MonoMerge"]
 		}];
-		
-		this.outputModule = this.createModule(~~(innerWidth/2), ~~(innerHeight/2), Modules.Output);
 	}
 
 	appendTo	(element) {
@@ -149,152 +152,21 @@ class JAMS {
 					})
 				)
 			} else {
-				this.interface.add(
-					new InterfaceContextMenu({ x: x, y: y,
-						options: [{
-							text: "Delete",
-							callback: () => this.deleteModule(currentModule)
-						},{
-							text: "Parameters",
-							callback: () => {
-								let win = new InterfaceWindow({ title: `${currentModule.name} Parameters`, x: x, y: y, w: 400, h: 200, isResizable: true });
-
-								win
-								.appendChild(new WindowText({
-									ww: 1/2, wh: 30,
-									content: "Module Name"
-								}))
-								.appendChild(new WindowTextField({
-									ww: 1/2, wh: 30, 
-									getValue: () => currentModule.name,
-									setValue: x => currentModule.name = x
-								}))
-
-								currentModule.params.forEach( par => {
-									win.appendChild(new WindowText({
-										ww: 1/2, wh: 30,
-										content: par.name
-									}));
-
-									switch(par.type) {
-										case "text":
-											win.appendChild(new WindowTextField({
-												ww: 1/2, wh: 30, 
-												getValue: () => par.value,
-												setValue: x => par.value = x
-											}))
-										break;
-										case "number":
-											win.appendChild(new WindowNumber({
-												ww: 1/2, wh: 30,
-												getValue: () => par.value,
-												setValue: x => par.value = x
-											}))
-										break;
-										case "boolean":
-											win.appendChild(new WindowCheckBox({
-												ww: 1/2, wh: 30,
-												getValue: () => par.value,
-												setValue: x => par.value = x
-											}))
-										break;
-										case "wavefile":
-											win.appendChild(new WindowFileUpload({
-												ww: 1/2, wh: 30,
-												extension: ".wav",
-												getValue: () => x,
-												setValue: x => {
-													try {
-														let parsed = WaveReader(x);
-														par.value = parsed;
-														if (par.onload) par.onload();
-													} catch(e) {
-														console.error(e);
-														this.interface.add((new InterfaceWindow({x: 100, y:100, w: 400, h: 50, title: "Error"}))
-															.appendChild(new WindowText({
-																ww: 1, wh: 20,
-																content: e.message
-															}))
-														)
-													}
-												}
-											}))
-										break;
-										default:
-											win.appendChild(new WindowText({
-												ww: 1/2, wh: 30,
-												content: "<unsupported type>"
-											}));
-									}
-								})
-
-								this.interface.add(win);
-							}
-						}]
-					})
-				)
+				// for some reason, passing `this` doesn't work, so we pass it as an argument
+				JAMS.Interactions.rightClickOnModule.call(null, this, e, x, y, currentModule);
 			}
 		} else {
-
-			let pluginTree = this.plugins.map( category => { 
-				return { 
-					text: category.name, 
-					children: category.children.map( child => {
-					return {
-						text: child,
-						callback: () => this.createModule(this.desktop.mouseMapX(x), this.desktop.mouseMapY(y), Modules[child])
-					}})
-				} 
-			});
-
-			this.interface.add(
-				new InterfaceContextMenu({ x: x, y: y, 
-					options: [{
-						text: "Add",
-						children: pluginTree
-					},{
-						text: "Save Setup",
-						callback: this.exportSetup.bind(this)
-					},{
-						text: "Open Setup",
-						callback: this.openSetup.bind(this)
-					},{
-						text: "New Setup",
-						callback: () => {
-							let win = new InterfaceWindow({ title: "Confirm", x: x, y: y, w: 200, h: 70, isResizable: false	});
-
-							win
-							.appendChild(new WindowText({ content: "Confirm clearing setup?", wh: 25, ww: 1 }))
-							.appendChild(new WindowButton({ content: "OK!" , callback: () => { this.newSetup(); win.close(); }, wh: 15 }))
-
-							this.interface.add(win)
-						}
-					},{
-						text: "About",
-						callback: () => {
-							let win = new InterfaceWindow({ title: "About", x: x, y: y, w: 400, h: 170, isResizable: false});
-
-							win
-							.appendChild(new WindowText({ content: "JAMS", fontSize: 3, wh: 50, ww: 1}))
-							.appendChild(new WindowText({ content: "JAMS - A Modular System", fontSize: 2, wh: 20, ww: 1}))
-							.appendChild(new WindowText({ content: "Fork me at github.com/khoin/JAMS ", fontSize: 1, wh: 40, ww: 1}))
-							.appendChild(new WindowButton({ content: "Repository", wh: 20, ww: 0.333, callback: () => {window.open("https://github.com/khoin/JAMS")} }))
-							.appendChild(new WindowButton({ content: "Acknowledgements", wh: 20, ww: 0.333, callback: () => {window.open("http://jams.systems/#acknowledgements")} }))
-							.appendChild(new WindowButton({ content: "Examples", wh: 20, ww: 0.333, callback: () => {window.open("http://jams.systems/examples")} }))
-							.appendChild(new WindowPalette({ palette: this.g.palette, wh: 20, ww: 1}));
-
-							this.interface.add(win);
-						}
-					}]
-				})
-			)
+			JAMS.Interactions.rightClickOnDesktop.call(null, this, e, x, y);
 		}
 	}
 
 	render 		() {
-		this.g.background("#000");
-		this.desktop.render();
-		this.interface.render();
+		if (this.frameCount % ~~this.preferences.getItem("fpsFactor") == 0) {
+			this.g.background(this.preferences.getItem("background"));
+			this.desktop.render();
+			this.interface.render();
+		}
+		this.frameCount = (this.frameCount + 1) % 9999;
 		requestAnimationFrame(this.render.bind(this));
 	}
 
