@@ -42,6 +42,9 @@ class JAMS {
 			name : "Clock",
 			children: ["Clock", "ClockDivider"]
 		},{
+			name: "MIDI/Signals",
+			children: ["MidiKeyboard"]
+		},{
 			name : "Harmony",
 			children: ["Note2Freq"]
 		},{
@@ -185,7 +188,7 @@ class JAMS {
 			y: y
 		});
 		
-		if(mod.midiRequest == true) this.midiModules.push(mod);
+		if(mod.midiRequest == true) this.midiModules.push(mod); 
 		this.modules.push(mod);
 		return mod;
 	}

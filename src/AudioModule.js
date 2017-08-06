@@ -16,7 +16,7 @@ class AudioModule {
 		this.inputs				= [];
 		this.params 			= [];
 		this.prerun				= false; // If true, module will be triggered to run BEFORE output.run is pulled.
-		this.midiRequest		= true;
+		this.midiRequest		= false;
 		this.midiParam 			= 0; // the index of the param that midi will write over
 
 	}

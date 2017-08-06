@@ -12,6 +12,7 @@ Modules.LinearAD = class LinearAD extends AudioModule {
 		this.name			= "linearad";
 
 		this.lastT = 0;
+		this.lastV = 0;
 		this.value = 0;
 		this.phase = 0;
 	}
@@ -27,9 +28,10 @@ Modules.LinearAD = class LinearAD extends AudioModule {
 	}
 	
 	run			(t, z, a) {
-		this.lastT = (this.getInput(0, t, 1)[0] > 0.5)? t : this.lastT;
+		let trig = this.getInput(0, t, 1)[0];
+		this.lastT = (trig > 0.9 && this.lastV == 0)? t : this.lastT;
 		const curr = t - this.lastT;
-		let attack = this.getInput(1, t, 1)[0] !== 0? this.getInput(1, t, 1)[0] : 0.010;
+		let attack = this.getInput(1, t, 1)[0] !== 0? this.getInput(1, t, 1)[0] : 0.008;
 		let decay  = this.getInput(2, t, 1)[0] !== 0? this.getInput(2, t, 1)[0] : 0.400;
 
 		if (curr <= attack) {
@@ -40,7 +42,7 @@ Modules.LinearAD = class LinearAD extends AudioModule {
 			this.phase = 1;
 		}
 		this.value = Math.max(0, Math.min(1, this.value));
-
+		this.lastV = trig;
 		return [this.value, this.value];
 	}
 }
