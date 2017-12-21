@@ -35,3 +35,6 @@ As always, remember to turn your volume down.
 * Sample Chopping [OPEN](/app#load#/jams/concepts/sampleChopping.json)
 * Chord Arp [OPEN](/app#load#/jams/concepts/chordArp.json)
 * Delayed Melody [OPEN](/app#load#/jams/concepts/delayedMelody.json)
+* MIDI arpeggio [OPEN](/app#load#/jams/concepts/midiArpeggio.json)
+
+* Mixture 01 [OPEN](/app#load#/jams/concepts/mixture01.json)
