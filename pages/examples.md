@@ -38,3 +38,4 @@ As always, remember to turn your volume down.
 * MIDI arpeggio [OPEN](/app#load#/jams/concepts/midiArpeggio.json)
 
 * Mixture 01 [OPEN](/app#load#/jams/concepts/mixture01.json)
+* DigitalCat [OPEN](/app#load#/jams/concepts/digicat.json)
