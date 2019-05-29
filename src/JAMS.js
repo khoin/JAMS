@@ -281,7 +281,7 @@ class JAMS {
 		});
 	}
 
-	alert 		(message, title = "Alert") { //this is synonymous to window.alert of the DOM
+	alert 		(message, title = "Alert", callback) { //this is synonymous to window.alert of the DOM
 		let win = new InterfaceWindow({
 				x: ~~(innerWidth/2), y: ~~(innerHeight/2),
 				w: 370, h: 100,
@@ -298,7 +298,10 @@ class JAMS {
 				ww: 1, wh: 30,
 				content: "OK!",
 				fontSize: 1,
-				callback: () => win.close()
+				callback: () => {
+					if (callback !== undefined) callback();
+					win.close();
+				}
 			}));
 
 			this.interface.add(win);

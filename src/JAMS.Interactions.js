@@ -106,7 +106,7 @@ JAMS.Interactions.menuBarMenus = [
 				new InterfaceContextMenu({ x: x, y: 23, padding: 8,
 					options: [{
 						text: "Examples",
-						callback: () => window.open("http://jams.systems/examples")
+						callback: () => window.open("./examples")
 					},{
 						text: "Bug Track",
 						callback: () => window.open("https://github.com/khoin/JAMS/issues")
@@ -120,7 +120,7 @@ JAMS.Interactions.menuBarMenus = [
 							.appendChild(new WindowText({ content: "JAMS - A Modular System", fontSize: 2, wh: 20, ww: 1}))
 							.appendChild(new WindowText({ content: "Fork me at github.com/khoin/JAMS ", fontSize: 1, wh: 40, ww: 1}))
 							.appendChild(new WindowButton({ content: "Repository", wh: 20, ww: 0.5, callback: () => {window.open("https://github.com/khoin/JAMS")} }))
-							.appendChild(new WindowButton({ content: "Acknowledgements", wh: 20, ww: 0.5, callback: () => {window.open("http://jams.systems/#acknowledgements")} }))
+							.appendChild(new WindowButton({ content: "Acknowledgements", wh: 20, ww: 0.5, callback: () => {window.open("./#acknowledgements")} }))
 							.appendChild(new WindowPalette({ palette: app.g.palette, wh: 20, ww: 1}));
 
 							interface.add(win);

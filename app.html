@@ -67,6 +67,7 @@
 try { 
 	var app = new JAMS({width: innerWidth, height: innerHeight}).appendTo(document.body);
 	app.init();
+	app.alert("Click OK to resume AudioContext.", "Resume Context", () => app.aC.resume());
 
 	// load setup if available
 	let hash = window.location.hash.split("#");
