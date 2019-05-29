@@ -72,7 +72,7 @@ try {
 	// load setup if available
 	let hash = window.location.hash.split("#");
 	if (hash[1] == "load") 
-		app.openSetupFromUrl(hash[2])
+		app.openSetupFromUrl("."+hash[2])
 	
 } catch(e) {
 	document.write('There was an Error loading JAMS: <br>');
